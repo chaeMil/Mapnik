@@ -1,38 +1,52 @@
 package cz.mapnik.app;
 
+import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
+import com.google.android.gms.maps.StreetViewPanoramaOptions;
+import com.google.android.gms.maps.StreetViewPanoramaView;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class GuessActivity extends ActionBarActivity implements OnStreetViewPanoramaReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GuessActivity extends ActionBarActivity implements OnStreetViewPanoramaReadyCallback
+        /*LocationListener*/ {
 
-    private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
+    private LocationManager locationManager;
+    private String provider;
+    private TextView latitudeField;
+    private TextView longitudeField;
+    private boolean hasLocation = false;
+    private double lat;
+    private double lng;
+    private StreetViewPanoramaView mSvpView;
 
-    protected synchronized void buildGoogleApiClient() {
+   /*protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-    }
+    }*/
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
-        panorama.setPosition(new LatLng(-33.87365, 151.20689));
+        if(hasLocation) {
+            panorama.setPosition(new LatLng(lat, lng));
+        }
+        //panorama.setPosition(new LatLng(-33.87365, 151.20689));
     }
 
     @Override
@@ -40,13 +54,107 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
 
+        latitudeField = (TextView) findViewById(R.id.latitude);
+        longitudeField = (TextView) findViewById(R.id.longtitude);
 
-        buildGoogleApiClient();
+        // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the location provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                if (!hasLocation) {
+                    lat = location.getLatitude();
+                    lng = location.getLongitude();
+                    Log.d("lat", String.valueOf(lat));
+                    Log.d("lng", String.valueOf(lng));
+                    latitudeField.setText(String.valueOf(lat));
+                    longitudeField.setText(String.valueOf(lng));
+                    hasLocation = true;
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
+        locationListener.onLocationChanged(location);
+
+        // Initialize the location fields
+        if (location != null) {
+            System.out.println("Provider " + provider + " has been selected.");
+            //onLocationChanged(location);
+        } else {
+            latitudeField.setText("Location not available");
+            longitudeField.setText("Location not available");
+        }
+
+        //buildGoogleApiClient();
 
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.streetviewpanorama);
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
+    }
+
+    /* Request updates at startup */
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }*/
+
+    /* Remove the locationlistener updates when Activity is paused */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //locationManager.removeUpdates(this);
+    }
+
+    /*@Override
+    public void onLocationChanged(Location location) {
+        float lat = (float) location.getLatitude();
+        float lng = (float) location.getLongitude();
+        Log.d("lat", String.valueOf(lat));
+        Log.d("lng", String.valueOf(lng));
+        latitudeField.setText(String.valueOf(lat));
+        longitudeField.setText(String.valueOf(lng));
+    }*/
+
+    /*@Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Toast.makeText(this, "Enabled new provider " + provider,
+                Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(this, "Disabled provider " + provider,
+                Toast.LENGTH_SHORT).show();
     }
 
 
@@ -55,7 +163,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_guess, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,25 +178,5 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            Log.d("last known latitude: ", String.valueOf(mLastLocation.getLatitude()));
-            Log.d("last known longtitude: ", String.valueOf(mLastLocation.getLongitude()));
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
 }
