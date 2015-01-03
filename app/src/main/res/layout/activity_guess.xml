@@ -12,20 +12,65 @@
         android:layout_gravity="center_horizontal|top" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/longtitude"
-        android:layout_below="@+id/latitude"
+        android:id="@+id/userLatitude"
+        android:text="userLatitude"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/latitude"
-        android:layout_alignParentTop="true"
+        android:id="@+id/userLongitude"
+        android:text="userLongitude"
+        android:layout_below="@+id/userLatitude"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userAddress"
+        android:text="userAddress"
+        android:layout_below="@id/userLongitude"
+        android:layout_alignParentLeft="true"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/panoramaLatitude"
+        android:text="panoramaLatitude"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/panoramaLongitude"
+        android:text="panoramaLongitude"
+        android:layout_below="@+id/panoramaLatitude"
+        android:layout_alignParentRight="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/panoramaAddress"
+        android:text="panoramaAddress"
+        android:layout_below="@id/panoramaLongitude"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/panoramaAddress2"
+        android:text="panoramaAddress2"
+        android:layout_below="@id/panoramaAddress"
+        android:layout_alignParentRight="true"/>
+
 
 
 </RelativeLayout>

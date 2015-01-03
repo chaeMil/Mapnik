@@ -1,25 +1,33 @@
 package cz.mapnik.app;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.location.Criteria;
+import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
-import com.google.android.gms.maps.StreetViewPanoramaView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
+
+import java.util.Arrays;
+import java.util.List;
+
+import cz.mapnik.app.utils.Basic;
+import cz.mapnik.app.utils.Map;
 
 import static cz.mapnik.app.utils.Map.getRandomNearbyLocation;
 
@@ -27,42 +35,99 @@ import static cz.mapnik.app.utils.Map.getRandomNearbyLocation;
 public class GuessActivity extends ActionBarActivity implements OnStreetViewPanoramaReadyCallback
         /*LocationListener*/ {
 
-    private GoogleApiClient mGoogleApiClient;
-    private LocationManager locationManager;
+    private static final int ANSWER_RADIUS = 1000;
+    private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.2;
+    private static final int GUESS_RADIUS = 5000;
+    private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private String provider;
-    private TextView latitudeField;
-    private TextView longitudeField;
+    private TextView userLatitude;
+    private TextView userLongitude;
     private boolean hasUserLocation = false;
     private double lat;
     private double lng;
-    private StreetViewPanoramaView mSvpView;
+    private TextView panoramaLatitude;
+    private TextView panoramaLongitude;
+    private TextView userAddress;
+    private TextView panoramaAddress;
+    private TextView panoramaAddress2;
+    private static String rightAnswer;
+    private String wrongAnswer1;
+    private String wrongAnswer2;
+    private String[] answers;
 
-   /*protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }*/
 
     @Override
     public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
         if(hasUserLocation) {
-            //panorama.setPosition(new LatLng(lat, lng));
-            //panorama.setPosition(getRandomNearbyLocation(lng,lat,2000));
-            //fetchAnswerData(getApplicationContext(),String.valueOf(lng+","+lat));
-            panorama.setPosition(getRandomNearbyLocation(lng, lat, 5000),500);
+            panorama.setPosition(getRandomNearbyLocation(lat, lng, GUESS_RADIUS), GUESS_SNAP_RADIUS);
             panorama.setStreetNamesEnabled(false);
             panorama.setUserNavigationEnabled(false);
-            panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+            panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama
+                    .OnStreetViewPanoramaChangeListener() {
                 @Override
-                public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                    Log.d("panoramaLocation", panorama.getLocation().toString());
+                public void onStreetViewPanoramaChange(StreetViewPanoramaLocation
+                                                               streetViewPanoramaLocation) {
+                    if(panorama.getLocation() == null) {
+                        App.retryCount += 1;
+                        Log.i("panoramaLocation","not fixed on road, restarting activity ["
+                                +App.retryCount+"]");
+                        finish();
+                        Intent i = new Intent(GuessActivity.this, GuessActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "not fixed on road, restarting activity ["+App.retryCount+"x]"
+                                ,Toast.LENGTH_SHORT).show();
+                        App.retryCount = 0;
+
+                        double panLatitude = panorama.getLocation().position.latitude;
+                        double panLongitude = panorama.getLocation().position.longitude;
+
+                        panoramaLatitude.setText(String.valueOf(panLatitude));
+                        panoramaLongitude.setText(String.valueOf(panLongitude));
+
+                        Log.d("panoramaLatitude", String.valueOf(panLatitude));
+                        Log.d("panoramaLongitude", String.valueOf(panLongitude));
+
+                        List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
+                                panLatitude, panLongitude,1);
+
+                        panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
+                        panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
+
+                        answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                panAddress.get(0).getAddressLine(0));
+                    }
                 }
             });
 
         }
-        //panorama.setPosition(new LatLng(-33.87365, 151.20689));
+    }
+
+    public String[] createAnswers(ActionBarActivity a, double panLatitude,
+                                        double panLongitude, String rightAnswer) {
+
+        GuessActivity.rightAnswer = rightAnswer;
+
+        LatLng wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+                ANSWER_RADIUS);
+
+
+        LatLng wrongAnswer2Location = Map.getRandomNearbyLocation(
+                panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
+                panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
+                ANSWER_RADIUS);
+
+        Log.d("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
+        Log.d("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
+
+        wrongAnswer1 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
+                wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
+        wrongAnswer2 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
+                wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);
+
+        return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
     }
 
     @Override
@@ -72,16 +137,18 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-        latitudeField = (TextView) findViewById(R.id.latitude);
-        longitudeField = (TextView) findViewById(R.id.longtitude);
+        userLatitude = (TextView) findViewById(R.id.userLatitude);
+        userLongitude = (TextView) findViewById(R.id.userLongitude);
+        userAddress = (TextView) findViewById(R.id.userAddress);
 
-        // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the location provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(provider);
+        panoramaLatitude = (TextView) findViewById(R.id.panoramaLatitude);
+        panoramaLongitude = (TextView) findViewById(R.id.panoramaLongitude);
+        panoramaAddress = (TextView) findViewById(R.id.panoramaAddress);
+        panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
+
+        userAddress.setText(App.userAddress);
+
+        Location location = App.startingPoint;
 
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -91,8 +158,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     lng = location.getLongitude();
                     Log.d("lat", String.valueOf(lat));
                     Log.d("lng", String.valueOf(lng));
-                    latitudeField.setText(String.valueOf(lat));
-                    longitudeField.setText(String.valueOf(lng));
+                    userLatitude.setText(String.valueOf(lat));
+                    userLongitude.setText(String.valueOf(lng));
                     hasUserLocation = true;
 
                 }
@@ -121,11 +188,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             System.out.println("Provider " + provider + " has been selected.");
             //onLocationChanged(location);
         } else {
-            latitudeField.setText("Location not available");
-            longitudeField.setText("Location not available");
+            userLatitude.setText("Location not available");
+            userLongitude.setText("Location not available");
         }
 
-        //buildGoogleApiClient();
 
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
@@ -133,48 +199,47 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
-    /* Request updates at startup */
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
-    }*/
+    public Dialog createGuessDialog(ActionBarActivity a, String[] answers, final int rightAnswerIndex) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(a);
+        builder.setTitle(R.string.guess_location)
+                .setSingleChoiceItems(answers, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lv = ((AlertDialog)dialog).getListView();
+                        lv.setTag(new Integer(which));
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lv = ((AlertDialog)dialog).getListView();
+                        Integer selected = (Integer)lv.getTag();
+                        if(selected != null) {
+                            if(selected == rightAnswerIndex) {
+                                Toast.makeText(getApplicationContext(), "rightAnswer :)",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "wrongAnswer :(",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        return builder.create();
+    }
 
-    /* Remove the locationlistener updates when Activity is paused */
     @Override
     protected void onPause() {
         super.onPause();
         //locationManager.removeUpdates(this);
     }
-
-    /*@Override
-    public void onLocationChanged(Location location) {
-        float lat = (float) location.getLatitude();
-        float lng = (float) location.getLongitude();
-        Log.d("lat", String.valueOf(lat));
-        Log.d("lng", String.valueOf(lng));
-        latitudeField.setText(String.valueOf(lat));
-        longitudeField.setText(String.valueOf(lng));
-    }*/
-
-    /*@Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Toast.makeText(this, "Enabled new provider " + provider,
-                Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(this, "Disabled provider " + provider,
-                Toast.LENGTH_SHORT).show();
-    }*/
 
 
     @Override
@@ -191,13 +256,19 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            finish();
-            Intent i = new Intent(this, GuessActivity.class);
-            startActivity(i);
-            overridePendingTransition(0,0);
-            return true;
+        switch(id) {
+            case R.id.action_refresh:
+                finish();
+                Intent i = new Intent(this, GuessActivity.class);
+                startActivity(i);
+                overridePendingTransition(0,0);
+            break;
+            case R.id.action_guess:
+                Basic.shuffleArray(answers);
+                Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
+                int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
+                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
+            break;
         }
 
         return super.onOptionsItemSelected(item);
