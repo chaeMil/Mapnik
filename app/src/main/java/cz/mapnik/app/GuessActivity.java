@@ -1,6 +1,8 @@
 package cz.mapnik.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -15,9 +18,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
-import com.google.android.gms.maps.StreetViewPanoramaOptions;
 import com.google.android.gms.maps.StreetViewPanoramaView;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
+
+import static cz.mapnik.app.utils.Map.getRandomNearbyLocation;
 
 
 public class GuessActivity extends ActionBarActivity implements OnStreetViewPanoramaReadyCallback
@@ -28,7 +32,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private String provider;
     private TextView latitudeField;
     private TextView longitudeField;
-    private boolean hasLocation = false;
+    private boolean hasUserLocation = false;
     private double lat;
     private double lng;
     private StreetViewPanoramaView mSvpView;
@@ -42,9 +46,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }*/
 
     @Override
-    public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
-        if(hasLocation) {
-            panorama.setPosition(new LatLng(lat, lng));
+    public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
+        if(hasUserLocation) {
+            //panorama.setPosition(new LatLng(lat, lng));
+            //panorama.setPosition(getRandomNearbyLocation(lng,lat,2000));
+            //fetchAnswerData(getApplicationContext(),String.valueOf(lng+","+lat));
+            panorama.setPosition(getRandomNearbyLocation(lng, lat, 5000),500);
+            panorama.setStreetNamesEnabled(false);
+            panorama.setUserNavigationEnabled(false);
+            panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                @Override
+                public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
+                    Log.d("panoramaLocation", panorama.getLocation().toString());
+                }
+            });
+
         }
         //panorama.setPosition(new LatLng(-33.87365, 151.20689));
     }
@@ -53,6 +69,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         latitudeField = (TextView) findViewById(R.id.latitude);
         longitudeField = (TextView) findViewById(R.id.longtitude);
@@ -68,14 +86,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (!hasLocation) {
+                if (!hasUserLocation) {
                     lat = location.getLatitude();
                     lng = location.getLongitude();
                     Log.d("lat", String.valueOf(lat));
                     Log.d("lng", String.valueOf(lng));
                     latitudeField.setText(String.valueOf(lat));
                     longitudeField.setText(String.valueOf(lng));
-                    hasLocation = true;
+                    hasUserLocation = true;
+
                 }
             }
 
@@ -155,7 +174,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     public void onProviderDisabled(String provider) {
         Toast.makeText(this, "Disabled provider " + provider,
                 Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
 
     @Override
@@ -163,7 +182,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_guess, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -173,7 +192,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            finish();
+            Intent i = new Intent(this, GuessActivity.class);
+            startActivity(i);
+            overridePendingTransition(0,0);
             return true;
         }
 

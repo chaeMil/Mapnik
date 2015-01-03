@@ -1,6 +1,9 @@
 package cz.mapnik.app.utils;
 
 import android.location.Location;
+import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Random;
 
@@ -9,7 +12,7 @@ import java.util.Random;
  */
 public class Map {
 
-    public static void getRandomNearbyLocation(double x0, double y0, int radius) {
+    public static LatLng getRandomNearbyLocation(double x0, double y0, int radius) {
         Random random = new Random();
 
         // Convert radius from meters to degrees
@@ -27,6 +30,11 @@ public class Map {
 
         double foundLongitude = new_x + x0;
         double foundLatitude = y + y0;
-        System.out.println("Longitude: " + foundLongitude + "  Latitude: " + foundLatitude );
+
+        Log.d("foundLatitude", String.valueOf(foundLatitude));
+        Log.d("foundLongitude", String.valueOf(foundLongitude));
+
+        return new LatLng(foundLatitude, foundLongitude);
+        //System.out.println("Longitude: " + foundLongitude + "  Latitude: " + foundLatitude );
     }
 }
