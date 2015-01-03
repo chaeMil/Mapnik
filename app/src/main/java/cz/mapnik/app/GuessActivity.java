@@ -236,7 +236,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
-    public Dialog guessResultDialog(ActionBarActivity a, String message, final double guessLatitude,
+    public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer, final double guessLatitude,
                                     final double guessLongitude) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(R.string.guess_result)
@@ -252,12 +252,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(GuessActivity.this, ShowOnMap.class);
+                        i.putExtra("rightAnswer",rightAnswer);
                         i.putExtra("locLatitude",panLatitude);
                         i.putExtra("locLongitude",panLongitude);
                         i.putExtra("guessLatitude",guessLatitude);
-                        Log.d("guessLatitude", String.valueOf(guessLatitude));
                         i.putExtra("guessLongitude", guessLongitude);
-                        Log.d("guessLongitude", String.valueOf(guessLongitude));
                         startActivity(i);
                     }
                 });
@@ -355,7 +354,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             }
 
-                            guessResultDialog(GuessActivity.this, message,
+                            guessResultDialog(GuessActivity.this, message, right,
                                     wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
                         }
                     }
@@ -373,7 +372,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         a.finish();
         Intent i = new Intent(a, GuessActivity.class);
         a.startActivity(i);
-        a.overridePendingTransition(0,0);
+        a.overridePendingTransition(0, 0);
     }
 
     @Override
