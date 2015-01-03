@@ -24,6 +24,13 @@ public class StartActivity extends ActionBarActivity {
         Location location = Map.getLastKnownLocation(getApplicationContext());
         App.startingPoint = location;
 
+        if(App.DEBUG) {
+            Location startingPointDebug = new Location("startingPointDebug");
+            startingPointDebug.setLatitude(App.DEBUG_LATITUDE);
+            startingPointDebug.setLongitude(App.DEBUG_LONGITUDE);
+            App.setStartingPoint(startingPointDebug);
+        }
+
         if(App.userAddress == null) {
             App.userAddress = Map.getAddressFromLatLng(this, location.getLatitude(),
                     location.getLongitude(),1).get(0).getAddressLine(0);
