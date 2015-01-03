@@ -1,7 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".GuessActivity" tools:ignore="MergeRootFrame" >
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GuessActivity"
+    tools:ignore="MergeRootFrame"
+    android:fitsSystemWindows="false">
 
 
     <fragment
@@ -11,65 +16,85 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|top" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:paddingTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/userLatitude"
-        android:text="userLatitude"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userLongitude"
-        android:text="userLongitude"
-        android:layout_below="@+id/userLatitude"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userAddress"
-        android:text="userAddress"
-        android:layout_below="@id/userLongitude"
-        android:layout_alignParentLeft="true"/>
+        android:fitsSystemWindows="true">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/panoramaLatitude"
-        android:text="panoramaLatitude"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userLatitude"
+            android:text="userLatitude"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/panoramaLongitude"
-        android:text="panoramaLongitude"
-        android:layout_below="@+id/panoramaLatitude"
-        android:layout_alignParentRight="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userLongitude"
+            android:text="userLongitude"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/userLatitude"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userAddress"
+            android:text="userAddress"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/userLongitude"/>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/panoramaAddress"
-        android:text="panoramaAddress"
-        android:layout_below="@id/panoramaLongitude"
-        android:layout_alignParentRight="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/panoramaLatitude"
+            android:text="panoramaLatitude"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/panoramaAddress2"
-        android:text="panoramaAddress2"
-        android:layout_below="@id/panoramaAddress"
-        android:layout_alignParentRight="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/panoramaLongitude"
+            android:text="panoramaLongitude"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/panoramaLatitude"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/panoramaAddress"
+            android:text="panoramaAddress"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/panoramaLongitude"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/panoramaAddress2"
+            android:text="panoramaAddress2"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/panoramaAddress"/>
+
+    </RelativeLayout>
+
+
+    <at.markushi.ui.CircleButton
+        android:id="@+id/guessButton"
+        android:layout_width="96dip"
+        android:layout_height="96dip"
+        android:src="@drawable/ic_location_on"
+        app:cb_color="#ff27a44c"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="@dimen/navigation_bar_height" />
 
 
 

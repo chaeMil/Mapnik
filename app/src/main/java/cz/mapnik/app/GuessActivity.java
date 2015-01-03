@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import java.util.Arrays;
 import java.util.List;
 
+import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
 import cz.mapnik.app.utils.Map;
 
@@ -58,6 +60,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private LatLng wrongAnswer2Location;
     private double panLatitude;
     private double panLongitude;
+    private CircleButton guessButton;
 
 
     @Override
@@ -73,12 +76,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                                                streetViewPanoramaLocation) {
                     if(panorama.getLocation() == null) {
                         App.retryCount += 1;
-                        Log.i("panoramaLocation","not fixed on road, restarting activity ["
-                                +App.retryCount+"]");
+                        Log.i("panoramaLocation", "not fixed on road, restarting activity ["
+                                + App.retryCount + "]");
                         finish();
                         Intent i = new Intent(GuessActivity.this, GuessActivity.class);
                         startActivity(i);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 "not fixed on road, restarting activity ["+App.retryCount+"x]"
@@ -139,6 +142,17 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         setContentView(R.layout.activity_guess);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        guessButton = (CircleButton) findViewById(R.id.guessButton);
+        guessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Basic.shuffleArray(answers);
+                Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
+                int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
+                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
+            }
+        });
 
         userLatitude = (TextView) findViewById(R.id.userLatitude);
         userLongitude = (TextView) findViewById(R.id.userLongitude);
@@ -242,15 +256,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                     .replaceAll("\\d", "")                                       //remove digits from address
                                     .replaceAll("\\s+$", ""))) {                                //strip spaces
 
-                                Toast.makeText(getApplicationContext(), "almost right :)",
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),
+                                        "almost right ;)\n right answer is: " + rightAnswer,
+                                        Toast.LENGTH_LONG).show();
 
                                 right = false;
 
                             } else {
-
-                                Toast.makeText(getApplicationContext(), "wrong answer :(",
-                                        Toast.LENGTH_SHORT).show();
 
                                 right = false;
                             }
@@ -263,6 +275,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                     wrongLoc.setLongitude(wrongAnswer2Location.longitude);
                                 }
                                 distance = actualLoc.distanceTo(wrongLoc);
+
+                                if (distance <= 200) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "almost right ;)\nright answer is: " + rightAnswer,
+                                            Toast.LENGTH_LONG).show();
+
+                                } else if (distance > 200 && distance < 600) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "almost right\nright answer is: " + rightAnswer,
+                                            Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "wrong answer :(\nright answer is: " + rightAnswer,
+                                            Toast.LENGTH_LONG).show();
+                                }
 
                                 Toast.makeText(getApplicationContext(),
                                         getString(R.string.guess_distance) +
@@ -312,12 +339,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 startActivity(i);
                 overridePendingTransition(0,0);
             break;
-            case R.id.action_guess:
+            /*case R.id.action_guess:
                 Basic.shuffleArray(answers);
                 Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
                 createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
-            break;
+            break;*/
         }
 
         return super.onOptionsItemSelected(item);

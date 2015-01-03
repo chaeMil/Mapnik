@@ -5,6 +5,6 @@
     <item android:id="@+id/action_refresh" android:title="@string/action_refresh"
         android:orderInCategory="100" app:showAsAction="always" />
 
-    <item android:id="@+id/action_guess" android:title="@string/action_guess"
-        app:showAsAction="always" />
+    <!--<item android:id="@+id/action_guess" android:title="@string/action_guess"
+        app:showAsAction="always" />-->
 </menu>
