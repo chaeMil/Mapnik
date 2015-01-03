@@ -1,5 +1,6 @@
 package cz.mapnik.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -235,7 +236,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
-    public Dialog guessResultDialog(ActionBarActivity a, String message) {
+    public Dialog guessResultDialog(ActionBarActivity a, String message, final double guessLatitude,
+                                    final double guessLongitude) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(R.string.guess_result)
                 .setMessage(message)
@@ -243,7 +245,20 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        nextGuess();
+                        nextGuess(GuessActivity.this);
+                    }
+                })
+                .setNeutralButton(getString(R.string.show_on_map), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(GuessActivity.this, ShowOnMap.class);
+                        i.putExtra("locLatitude",panLatitude);
+                        i.putExtra("locLongitude",panLongitude);
+                        i.putExtra("guessLatitude",guessLatitude);
+                        Log.d("guessLatitude", String.valueOf(guessLatitude));
+                        i.putExtra("guessLongitude", guessLongitude);
+                        Log.d("guessLongitude", String.valueOf(guessLongitude));
+                        startActivity(i);
                     }
                 });
         return builder.create();
@@ -340,7 +355,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             }
 
-                            guessResultDialog(GuessActivity.this, message).show();
+                            guessResultDialog(GuessActivity.this, message,
+                                    wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
                         }
                     }
                 })
@@ -353,11 +369,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         return builder.create();
     }
 
-    public void nextGuess() {
-        finish();
-        Intent i = new Intent(this, GuessActivity.class);
-        startActivity(i);
-        overridePendingTransition(0,0);
+    public static void nextGuess(Activity a) {
+        a.finish();
+        Intent i = new Intent(a, GuessActivity.class);
+        a.startActivity(i);
+        a.overridePendingTransition(0,0);
     }
 
     @Override
