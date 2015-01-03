@@ -17,6 +17,8 @@
         android:layout_gravity="center_horizontal|top" />
 
     <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/debugValues"
         android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
