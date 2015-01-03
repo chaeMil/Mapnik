@@ -42,6 +42,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.08;
     private static final int GUESS_RADIUS = 5000;
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
+    private static final int MAX_RETRY_VALUE = 10;
     private String provider;
     private TextView userLatitude;
     private TextView userLongitude;
@@ -76,39 +77,47 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 @Override
                 public void onStreetViewPanoramaChange(StreetViewPanoramaLocation
                                                                streetViewPanoramaLocation) {
-                    if(panorama.getLocation() == null) {
-                        App.retryCount += 1;
-                        Log.i("panoramaLocation", "not fixed on road, restarting activity ["
-                                + App.retryCount + "]");
+                    if(App.retryCount > MAX_RETRY_VALUE) {
                         finish();
-                        Intent i = new Intent(GuessActivity.this, GuessActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0, 0);
-                    } else {
-                        if(App.retryCount > 0) {
-                            Toast.makeText(getApplicationContext(),
-                                    "not fixed on road, restarting activity [" + App.retryCount + "x]"
-                                    , Toast.LENGTH_SHORT).show();
-                        }
                         App.retryCount = 0;
+                        Toast.makeText(getApplicationContext(),
+                                "Error, could not lock on road!\nMaybe there's no Google Street View",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        if (panorama.getLocation() == null) {
+                            App.retryCount += 1;
+                            Log.i("panoramaLocation", "not fixed on road, restarting activity ["
+                                    + App.retryCount + "]");
+                            finish();
+                            Intent i = new Intent(GuessActivity.this, GuessActivity.class);
+                            startActivity(i);
+                            overridePendingTransition(0, 0);
+                        } else {
+                            if (App.retryCount > 0) {
+                                Toast.makeText(getApplicationContext(),
+                                        "not fixed on road, restarting activity [" + App.retryCount + "x]"
+                                        , Toast.LENGTH_SHORT).show();
+                            }
+                            App.retryCount = 0;
 
-                        panLatitude = panorama.getLocation().position.latitude;
-                        panLongitude = panorama.getLocation().position.longitude;
+                            panLatitude = panorama.getLocation().position.latitude;
+                            panLongitude = panorama.getLocation().position.longitude;
 
-                        panoramaLatitude.setText(String.valueOf(panLatitude));
-                        panoramaLongitude.setText(String.valueOf(panLongitude));
+                            panoramaLatitude.setText(String.valueOf(panLatitude));
+                            panoramaLongitude.setText(String.valueOf(panLongitude));
 
-                        Log.d("panoramaLatitude", String.valueOf(panLatitude));
-                        Log.d("panoramaLongitude", String.valueOf(panLongitude));
+                            Log.d("panoramaLatitude", String.valueOf(panLatitude));
+                            Log.d("panoramaLongitude", String.valueOf(panLongitude));
 
-                        List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
-                                panLatitude, panLongitude,1);
+                            List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
+                                    panLatitude, panLongitude, 1);
 
-                        panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
-                        panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
+                            panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
+                            panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
 
-                        answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                panAddress.get(0).getAddressLine(0));
+                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));
+                        }
                     }
                 }
             });
