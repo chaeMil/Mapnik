@@ -11,7 +11,7 @@ import java.util.Locale;
 public class App extends Application {
 
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public static boolean DEBUG_LOCATION = false;
     public static double DEBUG_LATITUDE = 50.0897178;
     public static double DEBUG_LONGITUDE = 14.4166699;

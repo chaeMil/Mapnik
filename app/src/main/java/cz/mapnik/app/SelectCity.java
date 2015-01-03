@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import cz.mapnik.app.utils.Cities;
+import cz.mapnik.app.utils.Map;
 
 /**
  * Created by chaemil on 3.1.15.
@@ -35,8 +36,9 @@ public class SelectCity extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                App.setStartingPoint(Map.getLocationFromAddress(SelectCity.this,
+                        String.valueOf(parent.getItemAtPosition(position))));
                 Intent i = new Intent(SelectCity.this, GuessActivity.class);
-                i.putExtra(App.CUSTOM_LOCATION, String.valueOf(parent.getItemAtPosition(position)));
                 startActivity(i);
                 finish();
             }

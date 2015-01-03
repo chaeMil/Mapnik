@@ -141,23 +141,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if(extras.containsKey(App.CUSTOM_LOCATION)) {
-                //App.setStartingPoint()
-            }
-        } else {
-            App.startingPoint = Map.getLastKnownLocation(getApplicationContext());
-        }
-        App.userAddress = Map.getAddressFromLatLng(GuessActivity.this,
-                App.startingPoint.getLatitude(), App.startingPoint.getLongitude(), 1)
-                    .get(0)
-                    .getAddressLine(0);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);

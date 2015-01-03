@@ -70,15 +70,22 @@ public class Map {
         return locationManager.getLastKnownLocation(provider);
     }
 
-    public static String getLocationFromAddress(Activity a, String address) {
+    public static Location getLocationFromAddress(Activity a, String address) {
+
         Geocoder geocoder;
         List<Address> output = null;
         geocoder = new Geocoder(a, Locale.getDefault());
+
         try {
             output = geocoder.getFromLocationName(address,1);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return output.get(0).getAddressLine(0);
+
+        Location out = new Location("out");
+        out.setLatitude(output.get(0).getLatitude());
+        out.setLongitude(output.get(0).getLongitude());
+
+        return out;
     }
 }

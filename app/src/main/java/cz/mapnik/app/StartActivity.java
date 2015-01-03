@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -19,14 +20,12 @@ import cz.mapnik.app.utils.Map;
 public class StartActivity extends ActionBarActivity {
 
     private Button startButton;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
-
-        Location location = Map.getLastKnownLocation(getApplicationContext());
-        App.startingPoint = location;
 
         if(App.DEBUG_LOCATION) {
             Location startingPointDebug = new Location("startingPointDebug");
@@ -35,10 +34,6 @@ public class StartActivity extends ActionBarActivity {
             App.setStartingPoint(startingPointDebug);
         }
 
-        if(App.userAddress == null) {
-            App.userAddress = Map.getAddressFromLatLng(this, location.getLatitude(),
-                    location.getLongitude(),1).get(0).getAddressLine(0);
-        }
 
         startButton = (Button) findViewById(R.id.startButton);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +58,14 @@ public class StartActivity extends ActionBarActivity {
                 .setNegativeButton(getString(R.string.use_my_location),new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        location = Map.getLastKnownLocation(getApplicationContext());
+                        App.setStartingPoint(location);
+                        if(App.userAddress == null) {
+                            App.userAddress = Map.getAddressFromLatLng(StartActivity.this,
+                                    location.getLatitude(), location.getLongitude(), 1)
+                                        .get(0)
+                                        .getAddressLine(0);
+                        }
                         Intent i = new Intent(StartActivity.this, GuessActivity.class);
                         startActivity(i);
                     }
