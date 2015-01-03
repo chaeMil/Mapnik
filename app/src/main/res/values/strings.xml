@@ -10,5 +10,6 @@
     <string name="action_guess">Guess</string>
     <string name="guess_location">Guess location</string>
     <string name="no_guess_selected">You have to guess the location (no option is selected)</string>
+    <string name="guess_distance">Distance between guess and actual location is</string>
 
 </resources>

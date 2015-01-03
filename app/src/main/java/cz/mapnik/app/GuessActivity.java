@@ -54,6 +54,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private String wrongAnswer1;
     private String wrongAnswer2;
     private String[] answers;
+    private LatLng wrongAnswer1Location;
+    private LatLng wrongAnswer2Location;
+    private double panLatitude;
+    private double panLongitude;
 
 
     @Override
@@ -81,8 +85,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 ,Toast.LENGTH_SHORT).show();
                         App.retryCount = 0;
 
-                        double panLatitude = panorama.getLocation().position.latitude;
-                        double panLongitude = panorama.getLocation().position.longitude;
+                        panLatitude = panorama.getLocation().position.latitude;
+                        panLongitude = panorama.getLocation().position.longitude;
 
                         panoramaLatitude.setText(String.valueOf(panLatitude));
                         panoramaLongitude.setText(String.valueOf(panLongitude));
@@ -110,11 +114,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         GuessActivity.rightAnswer = rightAnswer;
 
-        LatLng wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+        wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
                 ANSWER_RADIUS);
 
-
-        LatLng wrongAnswer2Location = Map.getRandomNearbyLocation(
+        wrongAnswer2Location = Map.getRandomNearbyLocation(
                 panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
                 panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
                 ANSWER_RADIUS);
@@ -199,7 +202,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
-    public Dialog createGuessDialog(ActionBarActivity a, String[] answers, final int rightAnswerIndex) {
+    public Dialog createGuessDialog(ActionBarActivity a, final String[] answers, final int rightAnswerIndex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(R.string.guess_location)
                 .setSingleChoiceItems(answers, -1, new DialogInterface.OnClickListener() {
@@ -222,6 +225,28 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             else {
                                 Toast.makeText(getApplicationContext(), "wrongAnswer :(",
                                         Toast.LENGTH_SHORT).show();
+
+                                double distance;
+                                Location wrongLoc = new Location("wrongLoc");
+                                Location actualLoc = new Location("actualLoc");
+                                actualLoc.setLatitude(panLatitude);
+                                actualLoc.setLongitude(panLongitude);
+                                if (Arrays.asList(answers).get(selected).equals(wrongAnswer1)) {
+                                    wrongLoc.setLatitude(wrongAnswer1Location.latitude);
+                                    wrongLoc.setLongitude(wrongAnswer1Location.longitude);
+                                } else {
+                                    wrongLoc.setLatitude(wrongAnswer2Location.latitude);
+                                    wrongLoc.setLongitude(wrongAnswer2Location.longitude);
+                                }
+                                distance = actualLoc.distanceTo(wrongLoc);
+
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.guess_distance) +
+                                        " " + String.valueOf((long)Math.floor(distance + 0.5d)) + "m",
+                                        Toast.LENGTH_LONG).show();
+
+                                Log.d("distance between guess and actual location: ",
+                                        String.valueOf(distance));
                             }
                         }
                     }
