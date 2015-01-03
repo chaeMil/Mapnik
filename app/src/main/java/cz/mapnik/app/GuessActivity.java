@@ -36,7 +36,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         /*LocationListener*/ {
 
     private static final int ANSWER_RADIUS = 1000;
-    private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.2;
+    private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.08;
     private static final int GUESS_RADIUS = 5000;
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private String provider;
@@ -208,29 +208,53 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 .setSingleChoiceItems(answers, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ListView lv = ((AlertDialog)dialog).getListView();
+                        ListView lv = ((AlertDialog) dialog).getListView();
                         lv.setTag(new Integer(which));
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ListView lv = ((AlertDialog)dialog).getListView();
-                        Integer selected = (Integer)lv.getTag();
-                        if(selected != null) {
-                            if(selected == rightAnswerIndex) {
-                                Toast.makeText(getApplicationContext(), "rightAnswer :)",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "wrongAnswer :(",
+                        ListView lv = ((AlertDialog) dialog).getListView();
+                        Integer selected = (Integer) lv.getTag();
+                        if (selected != null) {
+
+                            boolean right = false;
+
+                            String selectedAnswer = Arrays.asList(answers).get(selected);
+                            double distance;
+                            Location wrongLoc = new Location("wrongLoc");
+                            Location actualLoc = new Location("actualLoc");
+
+                            actualLoc.setLatitude(panLatitude);
+                            actualLoc.setLongitude(panLongitude);
+
+                            if (selected == rightAnswerIndex || selectedAnswer.equals(rightAnswer)) {
+                                Toast.makeText(getApplicationContext(), "right answer :)",
                                         Toast.LENGTH_SHORT).show();
 
-                                double distance;
-                                Location wrongLoc = new Location("wrongLoc");
-                                Location actualLoc = new Location("actualLoc");
-                                actualLoc.setLatitude(panLatitude);
-                                actualLoc.setLongitude(panLongitude);
+                                right = true;
+
+                            } else if (rightAnswer.contains(selectedAnswer
+                                    .replaceAll("\\d", "")                                       //remove digits from address
+                                    .replaceAll("\\s+$", ""))                                   //strip spaces
+                                    || selectedAnswer.contains(rightAnswer
+                                    .replaceAll("\\d", "")                                       //remove digits from address
+                                    .replaceAll("\\s+$", ""))) {                                //strip spaces
+
+                                Toast.makeText(getApplicationContext(), "almost right :)",
+                                        Toast.LENGTH_SHORT).show();
+
+                                right = false;
+
+                            } else {
+
+                                Toast.makeText(getApplicationContext(), "wrong answer :(",
+                                        Toast.LENGTH_SHORT).show();
+
+                                right = false;
+                            }
+                            if (!right) {
                                 if (Arrays.asList(answers).get(selected).equals(wrongAnswer1)) {
                                     wrongLoc.setLatitude(wrongAnswer1Location.latitude);
                                     wrongLoc.setLongitude(wrongAnswer1Location.longitude);
@@ -242,7 +266,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                                 Toast.makeText(getApplicationContext(),
                                         getString(R.string.guess_distance) +
-                                        " " + String.valueOf((long)Math.floor(distance + 0.5d)) + "m",
+                                                " " + String.valueOf((long) Math.floor(distance + 0.5d)) + "m",
                                         Toast.LENGTH_LONG).show();
 
                                 Log.d("distance between guess and actual location: ",
