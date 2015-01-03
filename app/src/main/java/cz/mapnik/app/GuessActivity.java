@@ -236,6 +236,25 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
+    public Dialog exitDialog(ActionBarActivity a) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(a);
+        builder.setMessage(R.string.exit_game)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        return builder.create();
+    }
+
     public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer, final double guessLatitude,
                                     final double guessLongitude) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
@@ -377,11 +396,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //locationManager.removeUpdates(this);
+    public void onBackPressed() {
+        exitDialog(GuessActivity.this).show();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

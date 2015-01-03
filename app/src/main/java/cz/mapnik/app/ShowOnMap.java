@@ -55,7 +55,8 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
 
 
         map.setMyLocationEnabled(false);
-        map.getUiSettings().setMapToolbarEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(false);
+        map.setMyLocationEnabled(true);
 
         if(!rightAnswer) {
             Marker guessMarker = map.addMarker(new MarkerOptions()
