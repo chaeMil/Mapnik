@@ -371,6 +371,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     public static void nextGuess(Activity a) {
         a.finish();
         Intent i = new Intent(a, GuessActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         a.startActivity(i);
         a.overridePendingTransition(0, 0);
     }

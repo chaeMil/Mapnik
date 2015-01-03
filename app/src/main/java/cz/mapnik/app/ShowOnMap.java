@@ -1,6 +1,7 @@
 package cz.mapnik.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -43,9 +44,10 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public void onBackPressed() {
+        super.onBackPressed();
         GuessActivity.nextGuess(this);
+        finish();
     }
 
     @Override
@@ -69,13 +71,15 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
                 .position(location));
         locMarker.showInfoWindow();
 
-        PolylineOptions line = new PolylineOptions()
-                .add(guess)
-                .add(location)
-                .width(4)
-                .color(Color.RED);
+        if(!rightAnswer) {
+            PolylineOptions line = new PolylineOptions()
+                    .add(guess)
+                    .add(location)
+                    .width(4)
+                    .color(Color.RED);
 
-        map.addPolyline(line);
+            map.addPolyline(line);
+        }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(guess,5));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location,10));
