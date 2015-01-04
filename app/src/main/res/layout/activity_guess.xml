@@ -102,11 +102,12 @@
             android:id="@+id/countdown"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:textColor="#ff27a44c"
-            android:textSize="40sp"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
             ppv:ppvStrokeWidth="0dp"
+            ppv:ppvStrokeColor="@android:color/transparent"
             ppv:ppvProgressFillType="radial"
-            ppv:ppvBackgroundColor="#af000000"
+            ppv:ppvBackgroundColor="#c6dcdcdc"
             ppv:ppvProgressColor="#FFFFFF"/>
 
     </RelativeLayout>

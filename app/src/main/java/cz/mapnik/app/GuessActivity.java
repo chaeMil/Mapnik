@@ -48,7 +48,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int MAX_RETRY_VALUE = 10;
     private static final int GAME_MAX_ROUNDS = 10;
-    private static final int TIME_BONUS_COUNTDOWN_SECONDS = 15;
+    private static final int TIME_BONUS_COUNTDOWN_SECONDS = 60;
     private static int COUNTDOWN_TIME;
 
     private String provider;
@@ -180,7 +180,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             timeBonus = 1;
         }
         else {
-            timeBonus = (timeBonus * 2) / 4;
+            timeBonus = (timeBonus * 2) / 100;
         }
 
         int score = validity * (((metersFromPlayerPosition / 2) - metersFromActualLocation) * timeBonus);
@@ -285,6 +285,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         App.resetCurrentRoundsScore();
+                        stopTimer();
                         finish();
                     }
                 })
@@ -429,6 +430,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 + " timeBonus: " + String.valueOf(COUNTDOWN_TIME)
                                 + " score: " + String.valueOf(addScore));
 
+                            stopTimer();
+
                             guessResultDialog(GuessActivity.this, message, right,
                                     wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
                         }
@@ -523,8 +526,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         @Override
         public void onTick(long millisUntilFinished) {
             COUNTDOWN_TIME -= 1;
-            int progress = 720 / 100 * COUNTDOWN_TIME;
-            countdown.setProgress(progress);
+            double progress = (100.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) COUNTDOWN_TIME;
+            countdown.setProgress((int) progress);
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
         }
     }
