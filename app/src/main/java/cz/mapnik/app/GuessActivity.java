@@ -105,6 +105,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             App.CurrentGame.CURRENT_ROUND += 1;
                             if (App.CurrentGame.CURRENT_ROUND > GAME_MAX_ROUNDS) {
+                                Toast.makeText(getApplicationContext(),
+                                        "your score: " + App.CurrentGame.CURRENT_SCORE,
+                                        Toast.LENGTH_LONG).show();
+                                App.resetCurrentRoundsScore();
                                 finish();
                             }
 
@@ -157,6 +161,24 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);
 
         return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
+    }
+
+    public int calculateScore(int validity, int metersFromActualLocation,
+                              int metersFromPlayerPosition, int timeBonus) {
+        if (timeBonus == 0) {
+            timeBonus = 1;
+        }
+        else {
+            timeBonus = (timeBonus * 2) / 10;
+        }
+
+        int score = validity * (((metersFromPlayerPosition / 2) - metersFromActualLocation) * timeBonus);
+        if (score >= 0) {
+            return score;
+        }
+        else {
+            return 0;
+        }
     }
 
     @Override
@@ -265,8 +287,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         return builder.create();
     }
 
-    public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer, final double guessLatitude,
-                                    final double guessLongitude) {
+    public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer,
+                                    final double guessLatitude, final double guessLongitude) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(R.string.guess_result)
                 .setMessage(message)
@@ -303,6 +325,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ListView lv = ((AlertDialog) dialog).getListView();
@@ -310,11 +333,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         if (selected != null) {
 
                             boolean right = false;
+                            int validity = 0;
+
+                            double distanceFromGuess = 0;
 
                             String selectedAnswer = Arrays.asList(answers).get(selected);
-                            double distance;
+                            double distance = 0;
                             Location wrongLoc = new Location("wrongLoc");
                             Location actualLoc = new Location("actualLoc");
+                            Location guessLocation = null;
 
                             actualLoc.setLatitude(panLatitude);
                             actualLoc.setLongitude(panLongitude);
@@ -322,10 +349,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             String message = null;
 
                             if (selected == rightAnswerIndex || selectedAnswer.equals(rightAnswer)) {
-                                /*Toast.makeText(getApplicationContext(), "right answer :)",
-                                        Toast.LENGTH_SHORT).show();*/
                                 message = getString(R.string.right_answer);
                                 right = true;
+                                validity = 3;
+                                guessLocation = actualLoc;
 
                             } else if (rightAnswer.contains(selectedAnswer
                                     .replaceAll("\\d", "")                                       //remove digits from address
@@ -334,16 +361,16 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                     .replaceAll("\\d", "")                                       //remove digits from address
                                     .replaceAll("\\s+$", ""))) {                                //strip spaces
 
-                                /*Toast.makeText(getApplicationContext(),
-                                        "almost right ;)\n right answer is: " + rightAnswer,
-                                        Toast.LENGTH_LONG).show();*/
                                 message = getString(R.string.almost_right) + " " + rightAnswer;
 
                                 right = false;
+                                validity = 2;
+                                guessLocation = actualLoc;
 
                             } else {
 
                                 right = false;
+                                validity = 0;
                             }
                             if (!right) {
                                 if (Arrays.asList(answers).get(selected).equals(wrongAnswer1)) {
@@ -353,35 +380,42 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                     wrongLoc.setLatitude(wrongAnswer2Location.latitude);
                                     wrongLoc.setLongitude(wrongAnswer2Location.longitude);
                                 }
+
+                                guessLocation = wrongLoc;
+
                                 distance = actualLoc.distanceTo(wrongLoc);
+                                distanceFromGuess = Math.floor(distance + 0.5d);
 
                                 if (distance <= 500) {
-                                    /*Toast.makeText(getApplicationContext(),
-                                            "almost right ;)\nright answer is: " + rightAnswer,
-                                            Toast.LENGTH_LONG).show();*/
-
                                     message = getString(R.string.almost_right) + " " + rightAnswer;
+                                    validity = 1;
                                 } else {
-                                    /*Toast.makeText(getApplicationContext(),
-                                            "wrong answer :(\nright answer is: " + rightAnswer,
-                                            Toast.LENGTH_LONG).show();*/
-
                                     message = getString(R.string.wrong_answer) + " " + rightAnswer;
                                 }
 
-                                /*Toast.makeText(getApplicationContext(),
-                                        getString(R.string.guess_distance) +
-                                                " " + String.valueOf((long) Math.floor(distance + 0.5d)) + "m",
-                                        Toast.LENGTH_LONG).show();*/
-
                                 message += "\n" + getString(R.string.guess_distance) + " " +
-                                        String.valueOf((long) Math.floor(distance + 0.5d)) + "m";
+                                        String.valueOf((long) distanceFromGuess) + "m";
 
 
                                 Log.d("distance between guess and actual location: ",
                                         String.valueOf(distance));
 
                             }
+
+                            double metersFromPlayerPosition = App.startingPoint
+                                    .distanceTo(guessLocation);
+
+                            int addScore = calculateScore(validity,
+                                    (int) distanceFromGuess,
+                                    (int) metersFromPlayerPosition, 0);
+
+                            App.CurrentGame.CURRENT_SCORE += addScore;
+
+                            Log.d("addingToScore",
+                                "validity: " + String.valueOf(validity)
+                                + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
+                                + " metersFromPlayerPosition: " + String.valueOf( (int) metersFromPlayerPosition)
+                                + " score: " + String.valueOf(addScore));
 
                             guessResultDialog(GuessActivity.this, message, right,
                                     wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
