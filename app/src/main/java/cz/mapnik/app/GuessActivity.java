@@ -115,13 +115,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             timer.start();
 
                             App.CurrentGame.CURRENT_ROUND += 1;
-                            if (App.CurrentGame.CURRENT_ROUND > GAME_MAX_ROUNDS) {
-                                Toast.makeText(getApplicationContext(),
-                                        "your score: " + App.CurrentGame.CURRENT_SCORE,
-                                        Toast.LENGTH_LONG).show();
-                                App.resetCurrentRoundsScore();
-                                finish();
-                            }
 
                             App.retryCount = 0;
 
@@ -451,8 +444,17 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         stopTimer();
         Intent i = new Intent(a, GuessActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        a.startActivity(i);
-        a.overridePendingTransition(0, 0);
+        if (App.CurrentGame.CURRENT_ROUND < GAME_MAX_ROUNDS + 1) {
+            a.startActivity(i);
+            a.overridePendingTransition(0, 0);
+        }
+        else {
+            Toast.makeText(a.getApplicationContext(),
+                    "your score: " + App.CurrentGame.CURRENT_SCORE,
+                    Toast.LENGTH_LONG).show();
+            App.resetCurrentRoundsScore();
+            a.finish();
+        }
     }
 
     @Override
