@@ -3,6 +3,7 @@ package cz.mapnik.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,6 +11,7 @@ import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filippudak.ProgressPieView.ProgressPieView;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
@@ -44,8 +47,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GUESS_RADIUS = 5000;
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int MAX_RETRY_VALUE = 10;
-
     private static final int GAME_MAX_ROUNDS = 10;
+    private static final int TIME_BONUS_COUNTDOWN_SECONDS = 15;
+    private static int COUNTDOWN_TIME;
 
     private String provider;
     private TextView userLatitude;
@@ -68,6 +72,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private double panLongitude;
     private CircleButton guessButton;
     private RelativeLayout debugValues;
+    private ProgressPieView countdown;
+    private static MyCount timer;
 
 
     @Override
@@ -102,6 +108,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                         "not fixed on road, restarting activity [" + App.retryCount + "x]"
                                         , Toast.LENGTH_SHORT).show();
                             }
+
+                            COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
+                            countdown = (ProgressPieView) findViewById(R.id.countdown);
+                            timer = new MyCount(TIME_BONUS_COUNTDOWN_SECONDS * 1000, 1000);
+                            timer.start();
 
                             App.CurrentGame.CURRENT_ROUND += 1;
                             if (App.CurrentGame.CURRENT_ROUND > GAME_MAX_ROUNDS) {
@@ -169,7 +180,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             timeBonus = 1;
         }
         else {
-            timeBonus = (timeBonus * 2) / 10;
+            timeBonus = (timeBonus * 2) / 4;
         }
 
         int score = validity * (((metersFromPlayerPosition / 2) - metersFromActualLocation) * timeBonus);
@@ -407,7 +418,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             int addScore = calculateScore(validity,
                                     (int) distanceFromGuess,
-                                    (int) metersFromPlayerPosition, 0);
+                                    (int) metersFromPlayerPosition, COUNTDOWN_TIME);
 
                             App.CurrentGame.CURRENT_SCORE += addScore;
 
@@ -415,6 +426,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 "validity: " + String.valueOf(validity)
                                 + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
                                 + " metersFromPlayerPosition: " + String.valueOf( (int) metersFromPlayerPosition)
+                                + " timeBonus: " + String.valueOf(COUNTDOWN_TIME)
                                 + " score: " + String.valueOf(addScore));
 
                             guessResultDialog(GuessActivity.this, message, right,
@@ -433,6 +445,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     public static void nextGuess(Activity a) {
         a.finish();
+        stopTimer();
         Intent i = new Intent(a, GuessActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         a.startActivity(i);
@@ -491,5 +504,26 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void stopTimer() {
+        timer.cancel();
+    }
+
+    public class MyCount extends CountDownTimer {
+        public MyCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            countdown.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            COUNTDOWN_TIME -= 1;
+            countdown.setText(String.valueOf(COUNTDOWN_TIME));
+        }
     }
 }
