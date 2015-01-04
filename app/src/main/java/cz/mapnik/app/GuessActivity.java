@@ -1,10 +1,8 @@
 package cz.mapnik.app;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -106,9 +104,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             }
 
                             App.CurrentGame.CURRENT_ROUND += 1;
-                            showCurrentRound(GuessActivity.this, getApplicationContext(),
-                                    App.CurrentGame.CURRENT_ROUND, GAME_MAX_ROUNDS);
-
                             if (App.CurrentGame.CURRENT_ROUND > GAME_MAX_ROUNDS) {
                                 finish();
                             }
@@ -250,19 +245,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
-    public static void showCurrentRound(Activity a, Context c, int currentRound, int maxRounds) {
-        ActionBar actionBar = a.getActionBar();
-        TextView rounds = new TextView(c);
-        rounds.setText(c.getString(R.string.rounds) + currentRound + "/" + maxRounds);
-        actionBar.setCustomView(rounds);
-    }
-
     public Dialog exitDialog(ActionBarActivity a) {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setMessage(R.string.exit_game)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        App.resetCurrentRoundsScore();
                         finish();
                     }
                 })
@@ -425,6 +414,26 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_guess, menu);
+
+        //show score
+        TextView score = new TextView(getApplicationContext());
+        score.setText((getString(R.string.score) + " " + App.CurrentGame.CURRENT_SCORE).toUpperCase());
+        score.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+
+        menu.add(0,0,1,R.string.score).setActionView(score)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        //show current round
+        TextView rounds = new TextView(getApplicationContext());
+        rounds.setText((getString(R.string.rounds) + " "
+                + App.CurrentGame.CURRENT_ROUND + " / " + GAME_MAX_ROUNDS).toUpperCase());
+        rounds.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+
+        menu.add(0,0,1,R.string.rounds).setActionView(rounds)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
+
         return true;
     }
 

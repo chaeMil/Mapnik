@@ -1,5 +1,8 @@
 package cz.mapnik.app.utils;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+
 import java.util.Random;
 
 /**
@@ -27,5 +30,17 @@ public class Basic {
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static int dpToPx(Context c, int dp) {
+        DisplayMetrics displayMetrics = c.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public static int pxToDp(Context c, int px) {
+        DisplayMetrics displayMetrics = c.getResources().getDisplayMetrics();
+        int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return dp;
     }
 }

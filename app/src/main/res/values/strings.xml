@@ -24,6 +24,7 @@
     <string name="show_on_map">Show on map</string>
     <string name="exit_game">Exit game?</string>
     <string name="user_location_not_available">Your location is not available</string>
-    <string name="rounds">rounds:</string>
+    <string name="rounds">round:</string>
+    <string name="score">score:</string>
 
 </resources>
