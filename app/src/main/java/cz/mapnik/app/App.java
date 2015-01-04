@@ -20,6 +20,11 @@ public class App extends Application {
     public static String userAddress = null;
     public static Location startingPoint;
 
+    public static class CurrentGame {
+        public static int CURRENT_ROUND = 0;
+        public static int CURRENT_SCORE = 0;
+    }
+
     public static void setStartingPoint(Location startingPoint) {
         App.startingPoint = startingPoint;
     }

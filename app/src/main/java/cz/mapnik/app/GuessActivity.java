@@ -1,8 +1,10 @@
 package cz.mapnik.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -44,6 +46,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GUESS_RADIUS = 5000;
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int MAX_RETRY_VALUE = 10;
+
+    private static final int GAME_MAX_ROUNDS = 10;
+
     private String provider;
     private TextView userLatitude;
     private TextView userLongitude;
@@ -99,6 +104,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                         "not fixed on road, restarting activity [" + App.retryCount + "x]"
                                         , Toast.LENGTH_SHORT).show();
                             }
+
+                            App.CurrentGame.CURRENT_ROUND += 1;
+                            showCurrentRound(GuessActivity.this, getApplicationContext(),
+                                    App.CurrentGame.CURRENT_ROUND, GAME_MAX_ROUNDS);
+
+                            if (App.CurrentGame.CURRENT_ROUND > GAME_MAX_ROUNDS) {
+                                finish();
+                            }
+
                             App.retryCount = 0;
 
                             panLatitude = panorama.getLocation().position.latitude;
@@ -234,6 +248,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.streetviewpanorama);
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
+    }
+
+    public static void showCurrentRound(Activity a, Context c, int currentRound, int maxRounds) {
+        ActionBar actionBar = a.getActionBar();
+        TextView rounds = new TextView(c);
+        rounds.setText(c.getString(R.string.rounds) + currentRound + "/" + maxRounds);
+        actionBar.setCustomView(rounds);
     }
 
     public Dialog exitDialog(ActionBarActivity a) {
