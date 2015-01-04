@@ -23,5 +23,6 @@
     <string name="custom_location">Custom location</string>
     <string name="show_on_map">Show on map</string>
     <string name="exit_game">Exit game?</string>
+    <string name="user_location_not_available">Your location is not available</string>
 
 </resources>

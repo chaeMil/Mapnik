@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,13 +13,11 @@ import android.widget.Toast;
 
 import cz.mapnik.app.utils.Map;
 
-/**
- * Created by chaemil on 3.1.15.
- */
 public class StartActivity extends ActionBarActivity {
 
     private Button startButton;
     private Location location;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +56,21 @@ public class StartActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         location = Map.getLastKnownLocation(getApplicationContext());
-                        App.setStartingPoint(location);
-                        if(App.userAddress == null) {
-                            App.userAddress = Map.getAddressFromLatLng(StartActivity.this,
-                                    location.getLatitude(), location.getLongitude(), 1)
+                        if (location == null) {
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.user_location_not_available,
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            App.setStartingPoint(location);
+                            if (App.userAddress == null) {
+                                App.userAddress = Map.getAddressFromLatLng(StartActivity.this,
+                                        location.getLatitude(), location.getLongitude(), 1)
                                         .get(0)
                                         .getAddressLine(0);
+                            }
+                            Intent i = new Intent(StartActivity.this, GuessActivity.class);
+                            startActivity(i);
                         }
-                        Intent i = new Intent(StartActivity.this, GuessActivity.class);
-                        startActivity(i);
                     }
                 });
         return builder.create();
