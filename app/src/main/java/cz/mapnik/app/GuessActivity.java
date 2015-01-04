@@ -523,6 +523,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         @Override
         public void onTick(long millisUntilFinished) {
             COUNTDOWN_TIME -= 1;
+            int progress = 720 / 100 * COUNTDOWN_TIME;
+            countdown.setProgress(progress);
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
         }
     }

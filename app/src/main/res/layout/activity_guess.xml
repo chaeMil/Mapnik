@@ -87,6 +87,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginTop="25dp"
         android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,18 +95,19 @@
 
         <com.filippudak.ProgressPieView.ProgressPieView
             android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:fitsSystemWindows="true"
             android:layout_margin="8dp"
             android:layout_gravity="center"
             android:id="@+id/countdown"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            ppv:ppvProgressFillType="center"
-            ppv:ppvStrokeWidth="6dp"
-            ppv:ppvStrokeColor="#990000"
-            ppv:ppvBackgroundColor="#009900"
-            ppv:ppvProgressColor="#000099"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:textColor="#ff27a44c"
+            android:textSize="40sp"
+            ppv:ppvStrokeWidth="0dp"
+            ppv:ppvProgressFillType="radial"
+            ppv:ppvBackgroundColor="#af000000"
+            ppv:ppvProgressColor="#FFFFFF"/>
 
     </RelativeLayout>
 
