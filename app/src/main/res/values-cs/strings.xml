@@ -17,7 +17,7 @@
     <string name="wrong_answer">Špatná odpověď :( \n\nSprávná odpověď je:</string>
     <string name="start_game">Spustit hru!</string>
     <string name="choose_location">Vyber lokaci</string>
-    <string name="use_my_location">Použít mojí lokci</string>
+    <string name="use_my_location">Použít mojí lokaci</string>
     <string name="select_city">Vybrat město</string>
     <string name="search_city">Vyhledat město...</string>
     <string name="custom_location">Vlastní lokace</string>
