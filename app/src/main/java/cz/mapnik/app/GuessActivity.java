@@ -78,6 +78,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private ProgressPieView countdown;
     private static MyCount timer;
     private RelativeLayout timeBonusWrapper;
+    private CircleButton helpButton;
 
 
     @Override
@@ -231,6 +232,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
                 createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
+            }
+        });
+
+        helpButton = (CircleButton) findViewById(R.id.helpButton);
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(GuessActivity.this, MapHelpActivity.class);
+                startActivity(i);
             }
         });
 

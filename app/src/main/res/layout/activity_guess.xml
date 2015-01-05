@@ -91,39 +91,58 @@
         android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:id="@+id/timeBonusWrapper">
+        android:fitsSystemWindows="true">
 
-        <com.filippudak.ProgressPieView.ProgressPieView
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:fitsSystemWindows="true"
-            android:layout_margin="8dp"
-            android:layout_gravity="center"
-            android:id="@+id/countdown"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:textColor="@android:color/black"
-            android:textSize="30sp"
-            ppv:ppvStrokeWidth="0dp"
-            ppv:ppvStrokeColor="@android:color/transparent"
-            ppv:ppvProgressFillType="radial"
-            ppv:ppvBackgroundColor="#c6dcdcdc"
-            ppv:ppvProgressColor="#FFFFFF"/>
-
-        <TextView
-            android:layout_width="56dp"
+        <RelativeLayout
+            android:id="@+id/timeBonusWrapper"
+            android:layout_width="72dp"
             android:layout_height="wrap_content"
-            android:text="@string/time_bonus"
-            android:textAllCaps="true"
-            android:layout_below="@+id/countdown"
-            android:layout_alignLeft="@+id/countdown"
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:textColor="@android:color/white"
-            android:gravity="center_horizontal" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true">
+
+            <com.filippudak.ProgressPieView.ProgressPieView
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                android:layout_margin="8dp"
+                android:layout_gravity="center"
+                android:id="@+id/countdown"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                ppv:ppvStrokeWidth="0dp"
+                ppv:ppvStrokeColor="@android:color/transparent"
+                ppv:ppvProgressFillType="radial"
+                ppv:ppvBackgroundColor="#c6dcdcdc"
+                ppv:ppvProgressColor="#FFFFFF"/>
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/time_bonus"
+                android:textAllCaps="true"
+                android:layout_below="@+id/countdown"
+                android:layout_alignLeft="@+id/countdown"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:gravity="center_horizontal" />
+
+        </RelativeLayout>
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/helpButton"
+            android:layout_width="56dip"
+            android:layout_height="56dip"
+            android:src="@android:drawable/ic_menu_help"
+            app:cb_color="@color/bright_purple"
+            app:cb_pressedRingWidth="8dip"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/timeBonusWrapper" />
+
 
     </RelativeLayout>
 
