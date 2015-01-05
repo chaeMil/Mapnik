@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mapnik</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_refresh">Obnovit</string>
+    <string name="slogan">Poznej svoje okolí!</string>
+    <string name="start">Spustit</string>
+    <string name="connection_problem">Problém s připojením k internetu</string>
+    <string name="action_guess">Tipnout</string>
+    <string name="guess_location">Tvůj tip</string>
+    <string name="no_guess_selected">Musíš vybrat tipnout lokalitu (nic nevybráno)</string>
+    <string name="guess_distance">Vzdálenost mezi tipem a aktuální lokalitou:</string>
+    <string name="guess_result">Výsledky</string>
+    <string name="right_answer">Správná odpověď!</string>
+    <string name="almost_right">Skoro správně ;) \n\nSprávná odpověď:</string>
+    <string name="wrong_answer">Špatná odpověď :( \n\nSprávná odpověď je:</string>
+    <string name="start_game">Spustit hru!</string>
+    <string name="choose_location">Vyber lokaci</string>
+    <string name="use_my_location">Použít mojí lokci</string>
+    <string name="select_city">Vybrat město</string>
+    <string name="search_city">Vyhledat město...</string>
+    <string name="custom_location">Vlastní lokace</string>
+    <string name="show_on_map">Zobrazit na mapě</string>
+    <string name="exit_game">Ukončit hru?</string>
+    <string name="user_location_not_available">Tvoje lokace není dostupná</string>
+    <string name="rounds">kolo:</string>
+    <string name="score">skóre:</string>
+    <string name="time_bonus_is_out">Tvůj časový bonus vypršel!</string>
+    <string name="time_bonus">Časový bonus</string>
+    <string name="choose_diameter">Vybrat vzdálenost</string>
+    <string name="starting_location">Počáteční lokace</string>
+    <string name="guess">Tip</string>
+    <string name="right_location">Správná lokace</string>
+
+</resources>
