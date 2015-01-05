@@ -23,11 +23,13 @@ public class App extends Application {
     public static void resetCurrentRoundsScore() {
         CurrentGame.CURRENT_SCORE = 0;
         CurrentGame.CURRENT_ROUND = 1;
+        CurrentGame.ACTUAL_TIME_BONUS = 1;
     }
 
     public static class CurrentGame {
         public static int CURRENT_ROUND = 1;
         public static int CURRENT_SCORE = 0;
+        public static double ACTUAL_TIME_BONUS = 1;
     }
 
     public static void setStartingPoint(Location startingPoint) {

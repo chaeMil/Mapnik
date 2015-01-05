@@ -110,6 +110,20 @@
             ppv:ppvBackgroundColor="#c6dcdcdc"
             ppv:ppvProgressColor="#FFFFFF"/>
 
+        <TextView
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:text="@string/time_bonus"
+            android:textAllCaps="true"
+            android:layout_below="@+id/countdown"
+            android:layout_alignLeft="@+id/countdown"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal" />
+
     </RelativeLayout>
 
 
@@ -123,7 +137,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="2dp"
-        android:layout_marginBottom="@dimen/navigation_bar_height" />
+        android:layout_marginBottom="@dimen/navigation_bar_height"/>
 
 
 </RelativeLayout>

@@ -13,8 +13,8 @@
     <string name="guess_distance">Distance between guess and actual location is:</string>
     <string name="guess_result">Result of your guess</string>
     <string name="right_answer">Right answer!</string>
-    <string name="almost_right">Almost right ;) \nRight answer is:</string>
-    <string name="wrong_answer">Wrong answer :( \nRight answer is:</string>
+    <string name="almost_right">Almost right ;) \n\nRight answer is:</string>
+    <string name="wrong_answer">Wrong answer :( \n\nRight answer is:</string>
     <string name="start_game">Start game!</string>
     <string name="choose_location">Choose location</string>
     <string name="use_my_location">Use my location</string>
@@ -26,5 +26,7 @@
     <string name="user_location_not_available">Your location is not available</string>
     <string name="rounds">round:</string>
     <string name="score">score:</string>
+    <string name="time_bonus_is_out">Your time bonus is out!</string>
+    <string name="time_bonus">Time bonus</string>
 
 </resources>

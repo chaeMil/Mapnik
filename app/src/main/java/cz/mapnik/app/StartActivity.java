@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class StartActivity extends ActionBarActivity {
             App.setStartingPoint(startingPointDebug);
         }
 
+        //Log.d("calculateTestScore", String.valueOf(GuessActivity.calculateScore(3, 0, 2914, 45)));
 
         startButton = (Button) findViewById(R.id.startButton);
         startButton.setOnClickListener(new View.OnClickListener() {

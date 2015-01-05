@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.BaseColumns;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +48,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int MAX_RETRY_VALUE = 10;
     private static final int GAME_MAX_ROUNDS = 10;
-    private static final int TIME_BONUS_COUNTDOWN_SECONDS = 60;
+    private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
+    private static final double TIME_BONUS_MAX_MULTIPLIER = 4.0;
     private static int COUNTDOWN_TIME;
 
     private String provider = null;
@@ -166,23 +168,32 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
     }
 
-    public int calculateScore(int validity, int metersFromActualLocation,
+    public static int calculateScore(int validity, int metersFromActualLocation,
                               int metersFromPlayerPosition, int timeBonus) {
-        if (timeBonus == 0) {
-            timeBonus = 1;
+
+        double bonus;
+
+        if (validity >= 2) {
+            if (timeBonus <= 1) {
+                bonus = 1.0;
+            } else {
+                bonus = ((300.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) timeBonus) * 0.02;
+                if (bonus > TIME_BONUS_MAX_MULTIPLIER) {
+                    bonus = TIME_BONUS_MAX_MULTIPLIER;
+                }
+            }
         }
         else {
-            timeBonus = (timeBonus * 2) / 100;
+            bonus = 1.0;
         }
 
-        int score = validity * (((metersFromPlayerPosition / 2) - metersFromActualLocation) * timeBonus);
-        /*if (score >= 0) {
-            return score;
-        }
-        else {
-            return 0;
-        }*/
-        return score;
+        App.CurrentGame.ACTUAL_TIME_BONUS = bonus;
+        Log.d("bonus", String.valueOf(bonus));
+
+        double score = (double) validity * ((double) metersFromPlayerPosition
+                - (double) metersFromActualLocation) * bonus;
+
+        return (int) score;
     }
 
     @Override
@@ -296,6 +307,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer,
                                     final double guessLatitude, final double guessLongitude) {
+
+        if(App.CurrentGame.ACTUAL_TIME_BONUS > 1) {
+            Toast.makeText(getApplicationContext(), getString(R.string.time_bonus).toUpperCase() +
+                    ": " + Basic.round(App.CurrentGame.ACTUAL_TIME_BONUS,1) + "x",
+                    Toast.LENGTH_SHORT).show();
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(R.string.guess_result)
                 .setMessage(message)
@@ -328,7 +346,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ListView lv = ((AlertDialog) dialog).getListView();
-                        lv.setTag(which);
+                        lv.setTag(new Integer(which));
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -339,13 +357,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         Integer selected = (Integer) lv.getTag();
                         if (selected != null) {
 
-                            boolean right;
-                            int validity;
+                            boolean right = false;
+                            int validity = 0;
 
                             double distanceFromGuess = 0;
 
                             String selectedAnswer = Arrays.asList(answers).get(selected);
-                            double distance;
+                            double distance = 0;
                             Location wrongLoc = new Location("wrongLoc");
                             Location actualLoc = new Location("actualLoc");
                             Location guessLocation = null;
@@ -376,10 +394,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             } else {
 
-                                right = false;
-                                validity = 0;
-                            }
-                            if (!right) {
                                 if (Arrays.asList(answers).get(selected).equals(wrongAnswer1)) {
                                     wrongLoc.setLatitude(wrongAnswer1Location.latitude);
                                     wrongLoc.setLongitude(wrongAnswer1Location.longitude);
@@ -393,19 +407,20 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 distance = actualLoc.distanceTo(wrongLoc);
                                 distanceFromGuess = Math.floor(distance + 0.5d);
 
-                                if (distance <= 500) {
+                                if (distance > 500) {
+                                    message = getString(R.string.wrong_answer) + " " + rightAnswer;
+                                    validity = 0;
+                                    right = false;
+                                } else {
                                     message = getString(R.string.almost_right) + " " + rightAnswer;
                                     validity = 1;
-                                } else {
-                                    message = getString(R.string.wrong_answer) + " " + rightAnswer;
+                                    right = false;
                                 }
+                            }
+                            if (!right) {
 
-                                message += "\n" + getString(R.string.guess_distance) + " " +
+                                message += "\n\n" + getString(R.string.guess_distance) + " " +
                                         String.valueOf((long) distanceFromGuess) + "m";
-
-
-                                Log.d("distance between guess and actual location: ",
-                                        String.valueOf(distance));
 
                             }
 
@@ -419,11 +434,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             App.CurrentGame.CURRENT_SCORE += addScore;
 
                             Log.d("addingToScore",
-                                "validity: " + String.valueOf(validity)
-                                + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
-                                + " metersFromPlayerPosition: " + String.valueOf( (int) metersFromPlayerPosition)
-                                + " timeBonus: " + String.valueOf(COUNTDOWN_TIME)
-                                + " score: " + String.valueOf(addScore));
+                                    "validity: " + String.valueOf(validity)
+                                            + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
+                                            + " metersFromPlayerPosition: " + String.valueOf((int) metersFromPlayerPosition)
+                                            + " timeBonus: " + String.valueOf(COUNTDOWN_TIME)
+                                            + " score: " + String.valueOf(addScore));
 
                             stopTimer();
 
@@ -524,6 +539,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         @Override
         public void onFinish() {
+            Toast.makeText(getApplicationContext(), getString(R.string.time_bonus_is_out),
+                    Toast.LENGTH_LONG).show();
             countdown.setVisibility(View.GONE);
         }
 
