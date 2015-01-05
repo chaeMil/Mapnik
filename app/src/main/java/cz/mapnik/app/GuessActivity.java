@@ -127,17 +127,19 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             panLatitude = panorama.getLocation().position.latitude;
                             panLongitude = panorama.getLocation().position.longitude;
 
-                            panoramaLatitude.setText(String.valueOf(panLatitude));
-                            panoramaLongitude.setText(String.valueOf(panLongitude));
-
-                            Log.d("panoramaLatitude", String.valueOf(panLatitude));
-                            Log.d("panoramaLongitude", String.valueOf(panLongitude));
-
                             List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
                                     panLatitude, panLongitude, 1);
 
-                            panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
-                            panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
+                            if (App.DEBUG) {
+                                panoramaLatitude.setText(String.valueOf(panLatitude));
+                                panoramaLongitude.setText(String.valueOf(panLongitude));
+
+                                Log.d("panoramaLatitude", String.valueOf(panLatitude));
+                                Log.d("panoramaLongitude", String.valueOf(panLongitude));
+
+                                panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
+                                panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
+                            }
 
                             answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
                                     panAddress.get(0).getAddressLine(0));
