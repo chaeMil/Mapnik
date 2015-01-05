@@ -239,7 +239,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopTimer();
+                timer.onFinish();
+                helpButton.setVisibility(View.GONE);
                 Intent i = new Intent(GuessActivity.this, MapHelpActivity.class);
+                i.putExtra("locLatitude",panLatitude);
+                i.putExtra("locLongitude",panLongitude);
                 startActivity(i);
             }
         });
@@ -559,6 +564,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     public static void stopTimer() {
+        COUNTDOWN_TIME = 1;
         timer.cancel();
     }
 

@@ -13,10 +13,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import at.markushi.ui.CircleButton;
 
-/**
- * Created by chaemil on 5.1.15.
- */
+
 public class MapHelpActivity extends Activity implements OnMapReadyCallback {
+    private double locLatitude;
+    private double locLongitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,8 @@ public class MapHelpActivity extends Activity implements OnMapReadyCallback {
         setContentView(R.layout.map_activity);
 
         Bundle extras = getIntent().getExtras();
+        locLatitude = extras.getDouble("locLatitude");
+        locLongitude = extras.getDouble("locLongitude");
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -33,7 +36,7 @@ public class MapHelpActivity extends Activity implements OnMapReadyCallback {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
     }
@@ -46,9 +49,9 @@ public class MapHelpActivity extends Activity implements OnMapReadyCallback {
         map.getUiSettings().setAllGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
-        LatLng loc = new LatLng(App.startingPoint.getLatitude(),App.startingPoint.getLongitude());
+        LatLng loc = new LatLng(locLatitude,locLongitude);
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,50));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,27));
         map.addMarker(new MarkerOptions()
                 .position(loc)
                 .title(getString(R.string.right_location)));
