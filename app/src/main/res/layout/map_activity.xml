@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShowOnMap">
 
@@ -11,4 +13,14 @@
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.MapFragment"/>
 
-</LinearLayout>
+    <at.markushi.ui.CircleButton
+        android:id="@+id/doneButton"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:src="@drawable/ic_action_done"
+        app:cb_color="@color/bright_purple"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

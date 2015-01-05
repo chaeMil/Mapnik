@@ -38,7 +38,7 @@ public class SelectCity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 App.setStartingPoint(Map.getLocationFromAddress(SelectCity.this,
                         String.valueOf(parent.getItemAtPosition(position))));
-                Intent i = new Intent(SelectCity.this, GuessActivity.class);
+                Intent i = new Intent(SelectCity.this, ChooseDiameter.class);
                 startActivity(i);
                 finish();
             }

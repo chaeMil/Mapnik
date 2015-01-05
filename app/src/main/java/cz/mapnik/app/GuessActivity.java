@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Location;
@@ -46,7 +45,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     private static final int ANSWER_RADIUS = 1000;
     private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.08;
-    private static final int GUESS_RADIUS = 5000;
+    private static final int GUESS_RADIUS = App.CurrentGame.CURRENT_DIAMETER;
     private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int MAX_RETRY_VALUE = 10;
     private static final int GAME_MAX_ROUNDS = 10;
@@ -301,7 +300,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        App.resetCurrentRoundsScore();
+                        App.resetCurrentGameOptions();
                         stopTimer();
                         finish();
                     }
@@ -317,6 +316,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     public Dialog guessResultDialog(ActionBarActivity a, String message, final boolean rightAnswer,
+                                    final String rightLocation,
                                     final double guessLatitude, final double guessLongitude) {
 
         if(App.CurrentGame.ACTUAL_TIME_BONUS > 1) {
@@ -344,6 +344,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         i.putExtra("locLongitude",panLongitude);
                         i.putExtra("guessLatitude",guessLatitude);
                         i.putExtra("guessLongitude", guessLongitude);
+                        i.putExtra("rightLocation",rightLocation);
                         startActivity(i);
                     }
                 });
@@ -453,7 +454,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             stopTimer();
 
-                            guessResultDialog(GuessActivity.this, message, right,
+                            guessResultDialog(GuessActivity.this, message, right, rightAnswer,
                                     wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
                         }
                     }
@@ -480,7 +481,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             Toast.makeText(a.getApplicationContext(),
                     "your score: " + App.CurrentGame.CURRENT_SCORE,
                     Toast.LENGTH_LONG).show();
-            App.resetCurrentRoundsScore();
+            App.resetCurrentGameOptions();
             a.finish();
         }
     }

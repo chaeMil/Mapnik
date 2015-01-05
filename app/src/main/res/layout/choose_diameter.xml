@@ -34,11 +34,12 @@
             android:background="#AA000000"/>
 
         <at.markushi.ui.CircleButton
+            android:visibility="gone"
             android:id="@+id/confirmButton"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:src="@drawable/ic_diameter_3km"
-            app:cb_color="#ff27a44c"
+            android:src="@drawable/ic_action_done"
+            app:cb_color="@color/bright_purple"
             app:cb_pressedRingWidth="8dip"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"/>

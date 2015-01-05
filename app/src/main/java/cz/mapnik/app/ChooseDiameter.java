@@ -1,9 +1,8 @@
 package cz.mapnik.app;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +20,7 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
 
     private LatLng start;
     private int diameter = 0;
+    private CircleButton confirmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +34,13 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
         CircleButton threeKDiameterButton = (CircleButton) findViewById(R.id.threeKButton);
         CircleButton fiveKDiameterButton = (CircleButton) findViewById(R.id.fiveKButton);
         CircleButton tenKDiameterButton = (CircleButton) findViewById(R.id.tenKButton);
+        confirmButton = (CircleButton) findViewById(R.id.confirmButton);
 
         threeKDiameterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setDiameter(mapFragment, 3000);
-                diameter = 3000;
+
             }
         });
 
@@ -47,7 +48,7 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 setDiameter(mapFragment, 5000);
-                diameter = 5000;
+
             }
         });
 
@@ -55,7 +56,19 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 setDiameter(mapFragment, 10000);
-                diameter = 10000;
+
+            }
+        });
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (diameter != 0) {
+                    Intent i = new Intent(ChooseDiameter.this, GuessActivity.class);
+                    App.CurrentGame.CURRENT_DIAMETER = diameter;
+                    finish();
+                    startActivity(i);
+                }
             }
         });
 
@@ -66,6 +79,9 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
 
     public void setDiameter(MapFragment mapFragment, double radius) {
         GoogleMap map = mapFragment.getMap();
+
+        diameter = (int) radius;
+        confirmButton.setVisibility(View.VISIBLE);
 
         CircleOptions circleOptions = new CircleOptions()
                 .strokeColor(getResources().getColor(R.color.bright_green))
@@ -90,6 +106,7 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(false);
+        map.getUiSettings().setAllGesturesEnabled(false);
 
         setStartingPoint(map);
 

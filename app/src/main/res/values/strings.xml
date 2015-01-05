@@ -30,5 +30,7 @@
     <string name="time_bonus">Time bonus</string>
     <string name="choose_diameter">Choose diameter</string>
     <string name="starting_location">Starting location</string>
+    <string name="guess">Guess</string>
+    <string name="right_location">Right location</string>
 
 </resources>

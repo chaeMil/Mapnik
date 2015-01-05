@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import at.markushi.ui.CircleButton;
 
 public class ShowOnMap extends Activity implements OnMapReadyCallback {
 
@@ -30,6 +33,15 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        CircleButton doneButton = (CircleButton) findViewById(R.id.doneButton);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GuessActivity.nextGuess(ShowOnMap.this);
+                finish();
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
 
@@ -56,18 +68,20 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
 
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(true);
+        map.getUiSettings().setAllGesturesEnabled(false);
+        map.getUiSettings().setZoomGesturesEnabled(true);
+        map.getUiSettings().setScrollGesturesEnabled(true);
 
         if(!rightAnswer) {
             Marker guessMarker = map.addMarker(new MarkerOptions()
-                    .title("Guess")
-                    .snippet("Your guess")
+                    .title(getResources().getString(R.string.guess))
                     .position(guess));
             guessMarker.showInfoWindow();
         }
 
         Marker locMarker = map.addMarker(new MarkerOptions()
-                .title("Location")
-                .snippet("Right location")
+                .title(getResources().getString(R.string.right_location))
+                .snippet(getIntent().getExtras().getString("rightAnswer"))
                 .position(location));
         locMarker.showInfoWindow();
 
