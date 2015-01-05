@@ -6,12 +6,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.provider.BaseColumns;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -50,6 +52,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX_MULTIPLIER = 4.0;
+    private static final double TIME_BONUS_VALUE = 500;
     private static int COUNTDOWN_TIME;
 
     private String provider = null;
@@ -75,6 +78,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private RelativeLayout debugValues;
     private ProgressPieView countdown;
     private static MyCount timer;
+    private RelativeLayout timeBonusWrapper;
 
 
     @Override
@@ -114,6 +118,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             countdown = (ProgressPieView) findViewById(R.id.countdown);
                             timer = new MyCount(TIME_BONUS_COUNTDOWN_SECONDS * 1000, 1000);
                             timer.start();
+
+                            timeBonusWrapper = (RelativeLayout) findViewById(R.id.timeBonusWrapper);
 
                             App.CurrentGame.CURRENT_ROUND += 1;
 
@@ -175,7 +181,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         if (validity >= 2) {
             if (timeBonus <= 1) {
-                bonus = 1.0;
+                bonus = 0;
             } else {
                 bonus = ((300.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) timeBonus) * 0.02;
                 if (bonus > TIME_BONUS_MAX_MULTIPLIER) {
@@ -184,14 +190,16 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             }
         }
         else {
-            bonus = 1.0;
+            bonus = 0;
         }
 
-        App.CurrentGame.ACTUAL_TIME_BONUS = bonus;
-        Log.d("bonus", String.valueOf(bonus));
+        double bonusValue = bonus * TIME_BONUS_VALUE;
+
+        App.CurrentGame.ACTUAL_TIME_BONUS = bonusValue;
+        Log.d("bonus", String.valueOf(bonusValue));
 
         double score = (double) validity * ((double) metersFromPlayerPosition
-                - (double) metersFromActualLocation) * bonus;
+                - (double) metersFromActualLocation) + bonusValue;
 
         return (int) score;
     }
@@ -202,6 +210,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         setContentView(R.layout.activity_guess);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
+        }
 
         debugValues = (RelativeLayout) findViewById(R.id.debugValues);
 
@@ -310,7 +321,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         if(App.CurrentGame.ACTUAL_TIME_BONUS > 1) {
             Toast.makeText(getApplicationContext(), getString(R.string.time_bonus).toUpperCase() +
-                    ": " + Basic.round(App.CurrentGame.ACTUAL_TIME_BONUS,1) + "x",
+                    " +" + Basic.round(App.CurrentGame.ACTUAL_TIME_BONUS,0),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -463,7 +474,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (App.CurrentGame.CURRENT_ROUND < GAME_MAX_ROUNDS + 1) {
             a.startActivity(i);
-            a.overridePendingTransition(0, 0);
+            a.overridePendingTransition(R.animator.card_in, R.animator.card_out);
         }
         else {
             Toast.makeText(a.getApplicationContext(),
@@ -486,17 +497,23 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         //show score
         TextView score = new TextView(getApplicationContext());
-        score.setText((getString(R.string.score) + " " + App.CurrentGame.CURRENT_SCORE).toUpperCase());
-        score.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+            score.setText((getString(R.string.score) + " " + App.CurrentGame.CURRENT_SCORE)
+                    .toUpperCase());
+            score.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+            score.setTextColor(getResources().getColor(android.R.color.white));
+            score.setTypeface(null, Typeface.BOLD);
+            score.setShadowLayer(4,0,0,getResources().getColor(android.R.color.black));
 
         menu.add(0,0,1,R.string.score).setActionView(score)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         //show current round
         TextView rounds = new TextView(getApplicationContext());
-        rounds.setText((getString(R.string.rounds) + " "
-                + App.CurrentGame.CURRENT_ROUND + " / " + GAME_MAX_ROUNDS).toUpperCase());
-        rounds.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+            rounds.setText((getString(R.string.rounds) + " "
+                    + App.CurrentGame.CURRENT_ROUND + " / " + GAME_MAX_ROUNDS).toUpperCase());
+            rounds.setPadding(0,0,Basic.dpToPx(getApplicationContext(),15),0);
+            rounds.setTextColor(getResources().getColor(android.R.color.white));
+            rounds.setShadowLayer(4,0,0,getResources().getColor(android.R.color.black));
 
         menu.add(0,0,1,R.string.rounds).setActionView(rounds)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -541,7 +558,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         public void onFinish() {
             Toast.makeText(getApplicationContext(), getString(R.string.time_bonus_is_out),
                     Toast.LENGTH_LONG).show();
-            countdown.setVisibility(View.GONE);
+            timeBonusWrapper.setVisibility(View.GONE);
         }
 
         @Override

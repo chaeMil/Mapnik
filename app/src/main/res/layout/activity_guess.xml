@@ -91,7 +91,8 @@
         android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:id="@+id/timeBonusWrapper">
 
         <com.filippudak.ProgressPieView.ProgressPieView
             android:layout_alignParentRight="true"
