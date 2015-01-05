@@ -47,11 +47,11 @@ public class MapHelpActivity extends Activity implements OnMapReadyCallback {
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         LatLng loc = new LatLng(locLatitude,locLongitude);
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,27));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,17));
         map.addMarker(new MarkerOptions()
                 .position(loc)
                 .title(getString(R.string.right_location)));
