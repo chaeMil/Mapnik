@@ -3,7 +3,6 @@ package cz.mapnik.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -51,7 +50,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 60;
     private static int COUNTDOWN_TIME;
 
-    private String provider;
+    private String provider = null;
     private TextView userLatitude;
     private TextView userLongitude;
     private boolean hasUserLocation = false;
@@ -177,12 +176,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         }
 
         int score = validity * (((metersFromPlayerPosition / 2) - metersFromActualLocation) * timeBonus);
-        if (score >= 0) {
+        /*if (score >= 0) {
             return score;
         }
         else {
             return 0;
-        }
+        }*/
+        return score;
     }
 
     @Override
@@ -202,7 +202,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         guessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Basic.shuffleArray(answers);
+                if (answers != null) {
+                    Basic.shuffleArray(answers);
+                }
                 Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
                 createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
@@ -326,7 +328,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ListView lv = ((AlertDialog) dialog).getListView();
-                        lv.setTag(new Integer(which));
+                        lv.setTag(which);
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -337,13 +339,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         Integer selected = (Integer) lv.getTag();
                         if (selected != null) {
 
-                            boolean right = false;
-                            int validity = 0;
+                            boolean right;
+                            int validity;
 
                             double distanceFromGuess = 0;
 
                             String selectedAnswer = Arrays.asList(answers).get(selected);
-                            double distance = 0;
+                            double distance;
                             Location wrongLoc = new Location("wrongLoc");
                             Location actualLoc = new Location("actualLoc");
                             Location guessLocation = null;
