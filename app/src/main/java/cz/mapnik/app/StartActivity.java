@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +25,8 @@ public class StartActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         if(App.DEBUG_LOCATION) {
             Location startingPointDebug = new Location("startingPointDebug");
@@ -70,7 +73,7 @@ public class StartActivity extends ActionBarActivity {
                                         .get(0)
                                         .getAddressLine(0);
                             }
-                            Intent i = new Intent(StartActivity.this, GuessActivity.class);
+                            Intent i = new Intent(StartActivity.this, ChooseDiameter.class);
                             startActivity(i);
                         }
                     }

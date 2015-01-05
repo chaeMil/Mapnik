@@ -54,7 +54,6 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
 
 
-        map.setMyLocationEnabled(false);
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(true);
 

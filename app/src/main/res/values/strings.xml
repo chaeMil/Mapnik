@@ -28,5 +28,7 @@
     <string name="score">score:</string>
     <string name="time_bonus_is_out">Your time bonus is out!</string>
     <string name="time_bonus">Time bonus</string>
+    <string name="choose_diameter">Choose diameter</string>
+    <string name="starting_location">Starting location</string>
 
 </resources>

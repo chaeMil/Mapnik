@@ -133,7 +133,7 @@
         android:layout_width="96dip"
         android:layout_height="96dip"
         android:src="@drawable/ic_location_on"
-        app:cb_color="#ff27a44c"
+        app:cb_color="@color/bright_green"
         app:cb_pressedRingWidth="8dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
