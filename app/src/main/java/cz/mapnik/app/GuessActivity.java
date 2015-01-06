@@ -79,6 +79,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static MyCount timer;
     private RelativeLayout timeBonusWrapper;
     private CircleButton helpButton;
+    private RelativeLayout helpsWrapper;
+    private TextView helpsText;
 
 
     @Override
@@ -236,12 +238,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         });
 
         helpButton = (CircleButton) findViewById(R.id.helpButton);
+        helpsWrapper = (RelativeLayout) findViewById(R.id.helpsWrapper);
+        helpsText = (TextView) findViewById(R.id.helpsText);
+
+        if(App.CurrentGame.CURRENT_GAME_HELPS > 0) {
+            helpsWrapper.setVisibility(View.VISIBLE);
+            helpsText.setText(String.valueOf(App.CurrentGame.CURRENT_GAME_HELPS));
+        }
+
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 stopTimer();
+                App.CurrentGame.CURRENT_GAME_HELPS -= 1;
                 timer.onFinish();
-                helpButton.setVisibility(View.GONE);
+                helpsWrapper.setVisibility(View.GONE);
                 Intent i = new Intent(GuessActivity.this, MapHelpActivity.class);
                 i.putExtra("locLatitude",panLatitude);
                 i.putExtra("locLongitude",panLongitude);

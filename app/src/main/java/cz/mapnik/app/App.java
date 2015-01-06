@@ -25,6 +25,8 @@ public class App extends Application {
         CurrentGame.CURRENT_ROUND = 1;
         CurrentGame.ACTUAL_TIME_BONUS = 1;
         CurrentGame.CURRENT_DIAMETER = 0;
+        CurrentGame.CURRENT_GAME_HELPS = 5;
+
     }
 
     public static class CurrentGame {
@@ -32,6 +34,7 @@ public class App extends Application {
         public static int CURRENT_SCORE = 0;
         public static double ACTUAL_TIME_BONUS = 1;
         public static int CURRENT_DIAMETER = 0;
+        public static int CURRENT_GAME_HELPS = 5;
     }
 
     public static void setStartingPoint(Location startingPoint) {

@@ -134,15 +134,39 @@
 
         </RelativeLayout>
 
-        <at.markushi.ui.CircleButton
-            android:id="@+id/helpButton"
-            android:layout_width="56dip"
-            android:layout_height="56dip"
-            android:src="@android:drawable/ic_menu_help"
-            app:cb_color="@color/bright_purple"
-            app:cb_pressedRingWidth="8dip"
+        <RelativeLayout
+            android:id="@+id/helpsWrapper"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/timeBonusWrapper" />
+            android:layout_toLeftOf="@+id/timeBonusWrapper"
+            android:layout_toStartOf="@+id/timeBonusWrapper">
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/helpButton"
+                android:layout_width="56dip"
+                android:layout_height="56dip"
+                android:src="@android:drawable/ic_menu_help"
+                app:cb_color="@color/bright_purple"
+                app:cb_pressedRingWidth="8dip"
+                android:layout_alignParentTop="true"/>
+
+            <TextView
+                android:id="@+id/helpsText"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAllCaps="true"
+                android:layout_below="@+id/helpButton"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:gravity="center_horizontal" />
+
+        </RelativeLayout>
 
 
     </RelativeLayout>
