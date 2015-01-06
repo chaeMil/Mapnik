@@ -147,7 +147,7 @@
                 android:id="@+id/helpButton"
                 android:layout_width="56dip"
                 android:layout_height="56dip"
-                android:src="@android:drawable/ic_menu_help"
+                android:src="@drawable/ic_hints"
                 app:cb_color="@color/bright_purple"
                 app:cb_pressedRingWidth="8dip"
                 android:layout_alignParentTop="true"/>
