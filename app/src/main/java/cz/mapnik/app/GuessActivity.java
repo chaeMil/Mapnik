@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -144,8 +145,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
                             }
 
-                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));
+                            //TODO crashes on slow connection (NUllPointerException)
+                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));*/
+
+                            answers = new CreateAnswers(GuessActivity.this, panLatitude,
+                                    panLongitude, panAddress.get(0).getAddressLine(0))
+                                    .doInBackground();
                         }
                     }
                 }
@@ -576,10 +582,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     public static void stopTimer() {
         COUNTDOWN_TIME = 1;
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
-    public class MyCount extends CountDownTimer {
+    private class MyCount extends CountDownTimer {
         public MyCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
@@ -597,6 +605,45 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             double progress = (100.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) COUNTDOWN_TIME;
             countdown.setProgress((int) progress);
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
+        }
+    }
+
+    private class CreateAnswers extends AsyncTask<Void, Void, String[]> {
+
+        ActionBarActivity a;
+        double panLatitude;
+        double panLongitude;
+        String rightAnswer;
+
+        public CreateAnswers(ActionBarActivity a, double panLatitude,
+                             double panLongitude, String rightAnswer) {
+            this.a = a;
+            this.panLatitude = panLatitude;
+            this.panLongitude = panLongitude;
+            this.rightAnswer = rightAnswer;
+        }
+
+        @Override
+        protected String[]  doInBackground(Void... voids) {
+            GuessActivity.rightAnswer = rightAnswer;
+
+            wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+                    ANSWER_RADIUS);
+
+            wrongAnswer2Location = Map.getRandomNearbyLocation(
+                    panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
+                    panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
+                    ANSWER_RADIUS);
+
+            Log.d("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
+            Log.d("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
+
+            wrongAnswer1 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
+                    wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
+            wrongAnswer2 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
+                    wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);
+
+            return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
         }
     }
 }
