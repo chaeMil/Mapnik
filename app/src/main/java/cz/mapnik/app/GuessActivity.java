@@ -31,8 +31,12 @@ import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
 
 import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
@@ -146,12 +150,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             }
 
                             //TODO crashes on slow connection (NUllPointerException)
-                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));*/
-
-                            answers = new CreateAnswers(GuessActivity.this, panLatitude,
-                                    panLongitude, panAddress.get(0).getAddressLine(0))
-                                    .doInBackground();
+                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));
                         }
                     }
                 }
@@ -605,45 +605,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             double progress = (100.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) COUNTDOWN_TIME;
             countdown.setProgress((int) progress);
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
-        }
-    }
-
-    private class CreateAnswers extends AsyncTask<Void, Void, String[]> {
-
-        ActionBarActivity a;
-        double panLatitude;
-        double panLongitude;
-        String rightAnswer;
-
-        public CreateAnswers(ActionBarActivity a, double panLatitude,
-                             double panLongitude, String rightAnswer) {
-            this.a = a;
-            this.panLatitude = panLatitude;
-            this.panLongitude = panLongitude;
-            this.rightAnswer = rightAnswer;
-        }
-
-        @Override
-        protected String[]  doInBackground(Void... voids) {
-            GuessActivity.rightAnswer = rightAnswer;
-
-            wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
-                    ANSWER_RADIUS);
-
-            wrongAnswer2Location = Map.getRandomNearbyLocation(
-                    panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
-                    panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
-                    ANSWER_RADIUS);
-
-            Log.d("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
-            Log.d("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
-
-            wrongAnswer1 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
-                    wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
-            wrongAnswer2 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
-                    wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);
-
-            return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
         }
     }
 }
