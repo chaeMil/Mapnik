@@ -48,6 +48,12 @@ MERGED from com.android.support:support-v4:21.0.2:16:5
 MERGED from com.github.markushi:circlebutton:1.1:9:5
 MERGED from com.github.filippudak.progresspieview:library:1.0.4:11:5
 MERGED from com.android.support:support-v4:21.0.2:16:5
+MERGED from Mapnik:BaseGameUtils:unspecified:30:5
+MERGED from com.android.support:appcompat-v7:21.0.2:16:5
+MERGED from com.android.support:support-v4:21.0.2:16:5
+MERGED from com.android.support:support-v4:21.0.2:16:5
+MERGED from com.google.android.gms:play-services:6.5.87:20:5
+MERGED from com.android.support:support-v4:21.0.2:16:5
 	android:label
 		ADDED from AndroidManifest.xml:18:9
 	android:allowBackup
@@ -119,10 +125,17 @@ ADDED from AndroidManifest.xml:53:9
 meta-data#com.google.android.gms.version
 ADDED from AndroidManifest.xml:56:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
+MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:name
 		ADDED from AndroidManifest.xml:57:13
 	android:value
 		ADDED from AndroidManifest.xml:58:13
+meta-data#com.google.android.gms.games.APP_ID
+ADDED from AndroidManifest.xml:60:9
+	android:name
+		ADDED from AndroidManifest.xml:60:20
+	android:value
+		ADDED from AndroidManifest.xml:61:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.2:15:5
@@ -132,9 +145,21 @@ MERGED from com.android.support:support-v4:21.0.2:15:5
 MERGED from com.github.markushi:circlebutton:1.1:7:5
 MERGED from com.github.filippudak.progresspieview:library:1.0.4:7:5
 MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from Mapnik:BaseGameUtils:unspecified:22:5
+MERGED from com.android.support:appcompat-v7:21.0.2:15:5
+MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from com.google.android.gms:play-services:6.5.87:18:5
+MERGED from com.android.support:support-v4:21.0.2:15:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	android:minSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
+meta-data#unityplayer.ForwardNativeEventsToDalvik
+ADDED from Mapnik:BaseGameUtils:unspecified:26:5
+	android:name
+		ADDED from Mapnik:BaseGameUtils:unspecified:27:9
+	android:value
+		ADDED from Mapnik:BaseGameUtils:unspecified:28:9

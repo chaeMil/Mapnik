@@ -32,5 +32,6 @@
     <string name="starting_location">Počáteční lokace</string>
     <string name="guess">Tip</string>
     <string name="right_location">Správná lokace</string>
+    <string name="leaderboard">Žebříček</string>
 
 </resources>
