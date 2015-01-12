@@ -43,7 +43,8 @@
     <string name="you_won" translatable="false">OK! You won!</string>
     <string name="signin_other_error" translatable="false">There was an issue with sign in. Please try again later.</string>
     <string name="signin_failure" translatable="false">Signing in failed</string>
-    <string name="action_achievements" translatable="false">Achievements</string>
+    <string name="action_achievements">Achievements</string>
     <string name="action_leaderboard">Leaderboard</string>
+    <string name="leaderboard">Leaderboard</string>
 
 </resources>

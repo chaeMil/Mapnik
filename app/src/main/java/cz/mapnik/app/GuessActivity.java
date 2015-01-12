@@ -278,7 +278,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             public void onClick(View view) {
                 stopTimer();
                 App.CurrentGame.CURRENT_GAME_HELPS -= 1;
-                timer.onFinish();
+                if (timer != null) {
+                    timer.onFinish();
+                }
                 helpsWrapper.setVisibility(View.GONE);
                 Intent i = new Intent(GuessActivity.this, MapHelpActivity.class);
                 i.putExtra("locLatitude",panLatitude);
@@ -539,6 +541,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             Toast.makeText(a.getApplicationContext(),
                     "your score: " + App.CurrentGame.CURRENT_SCORE,
                     Toast.LENGTH_LONG).show();
+            App.log("finished game with score:", String.valueOf(App.CurrentGame.CURRENT_SCORE));
             PlayGames.submitHighScore(mGoogleApiClient, "CgkIu8v476oMEAIQBg",
                     App.CurrentGame.CURRENT_SCORE);
             App.resetCurrentGameOptions();

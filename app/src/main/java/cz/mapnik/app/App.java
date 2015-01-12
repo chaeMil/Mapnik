@@ -2,6 +2,7 @@ package cz.mapnik.app;
 
 import android.app.Application;
 import android.location.Location;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -12,6 +13,7 @@ public class App extends Application {
 
 
     public static boolean DEBUG = false;
+    public static boolean LOGGING = true;
     public static boolean DEBUG_LOCATION = false;
     public static double DEBUG_LATITUDE = 50.0897178;
     public static double DEBUG_LONGITUDE = 14.4166699;
@@ -39,5 +41,11 @@ public class App extends Application {
 
     public static void setStartingPoint(Location startingPoint) {
         App.startingPoint = startingPoint;
+    }
+
+    public static void log(String tag, String msg) {
+        if (LOGGING) {
+            Log.d(tag, msg);
+        }
     }
 }

@@ -33,5 +33,7 @@
     <string name="guess">Tip</string>
     <string name="right_location">Správná lokace</string>
     <string name="leaderboard">Žebříček</string>
+    <string name="action_leaderboard">Žebříček</string>
+    <string name="action_achievements">Úspěchy</string>
 
 </resources>
