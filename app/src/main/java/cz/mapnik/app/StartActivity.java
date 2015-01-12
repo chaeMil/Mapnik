@@ -1,5 +1,6 @@
 package cz.mapnik.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
 import cz.mapnik.app.utils.Map;
+import cz.mapnik.app.utils.PlayGames;
 
 public class StartActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -146,12 +148,16 @@ public class StartActivity extends ActionBarActivity implements
 
         switch(id) {
             case R.id.action_achievements:
-                startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),
-                        REQUEST_ACHIEVEMENTS);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),
+                            REQUEST_ACHIEVEMENTS);
+                }
             break;
             case R.id.action_leaderboard:
-                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                        "CgkIu8v476oMEAIQBg"), REQUEST_LEADERBOARD);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                            "CgkIu8v476oMEAIQBg"), REQUEST_LEADERBOARD);
+                }
         }
 
         return super.onOptionsItemSelected(item);
@@ -193,6 +199,8 @@ public class StartActivity extends ActionBarActivity implements
         // Put code here to display the sign-in button
     }
 
+
+
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
         if (requestCode == RC_SIGN_IN) {
@@ -205,8 +213,10 @@ public class StartActivity extends ActionBarActivity implements
                 // failed. The R.string.signin_failure should reference an error
                 // string in your strings.xml file that tells the user they
                 // could not be signed in, such as "Unable to sign in."
-                BaseGameUtils.showActivityResultError(this,
-                        requestCode, resultCode, R.string.signin_failure);
+                /*BaseGameUtils.showActivityResultError(this,
+                        requestCode, resultCode, R.string.signin_failure);*/
+
+                PlayGames.signinDisabledByUser(StartActivity.this).show();
             }
         }
     }

@@ -58,7 +58,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int MAX_RETRY_VALUE = 10;
     private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
-    private static final double TIME_BONUS_MAX_MULTIPLIER = 4.0;
+    private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
     private static int COUNTDOWN_TIME;
 
@@ -203,8 +203,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 bonus = 0;
             } else {
                 bonus = ((300.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) timeBonus) * 0.02;
-                if (bonus > TIME_BONUS_MAX_MULTIPLIER) {
-                    bonus = TIME_BONUS_MAX_MULTIPLIER;
+                if (bonus > TIME_BONUS_MAX) {
+                    bonus = TIME_BONUS_MAX;
                 }
             }
         }
@@ -633,8 +633,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 // failed. The R.string.signin_failure should reference an error
                 // string in your strings.xml file that tells the user they
                 // could not be signed in, such as "Unable to sign in."
-                BaseGameUtils.showActivityResultError(this,
-                        requestCode, resultCode, R.string.signin_failure);
+                PlayGames.signinDisabledByUser(GuessActivity.this).show();
             }
         }
     }

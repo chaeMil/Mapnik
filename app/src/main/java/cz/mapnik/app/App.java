@@ -28,6 +28,7 @@ public class App extends Application {
         CurrentGame.ACTUAL_TIME_BONUS = 1;
         CurrentGame.CURRENT_DIAMETER = 0;
         CurrentGame.CURRENT_GAME_HELPS = 5;
+        CurrentGame.GUESSES_IN_ROW = 0;
 
     }
 
@@ -37,6 +38,7 @@ public class App extends Application {
         public static double ACTUAL_TIME_BONUS = 1;
         public static int CURRENT_DIAMETER = 0;
         public static int CURRENT_GAME_HELPS = 5;
+        public static int GUESSES_IN_ROW = 0;
     }
 
     public static void setStartingPoint(Location startingPoint) {
