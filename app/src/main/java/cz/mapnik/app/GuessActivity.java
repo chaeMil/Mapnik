@@ -403,8 +403,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         Integer selected = (Integer) lv.getTag();
                         if (selected != null) {
 
-                            boolean right = false;
-                            int validity = 0;
+                            boolean isAnswerRight = false;
+                            int validityOfAnswer = 0;
 
                             double distanceFromGuess = 0;
 
@@ -421,8 +421,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             if (selected == rightAnswerIndex || selectedAnswer.equals(rightAnswer)) {
                                 message = getString(R.string.right_answer);
-                                right = true;
-                                validity = 3;
+                                isAnswerRight = true;
+                                validityOfAnswer = 3;
                                 guessLocation = actualLoc;
 
                             } else if (rightAnswer.contains(selectedAnswer
@@ -434,8 +434,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                                 message = getString(R.string.almost_right) + " " + rightAnswer;
 
-                                right = false;
-                                validity = 2;
+                                isAnswerRight = false;
+                                validityOfAnswer = 2;
                                 guessLocation = actualLoc;
 
                             } else {
@@ -455,15 +455,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                                 if (distance > 500) {
                                     message = getString(R.string.wrong_answer) + " " + rightAnswer;
-                                    validity = 0;
-                                    right = false;
+                                    validityOfAnswer = 0;
+                                    isAnswerRight = false;
                                 } else {
                                     message = getString(R.string.almost_right) + " " + rightAnswer;
-                                    validity = 1;
-                                    right = false;
+                                    validityOfAnswer = 1;
+                                    isAnswerRight = false;
                                 }
                             }
-                            if (!right) {
+                            if (!isAnswerRight) {
 
                                 message += "\n\n" + getString(R.string.guess_distance) + " " +
                                         String.valueOf((long) distanceFromGuess) + "m";
@@ -473,14 +473,14 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             double metersFromPlayerPosition = App.startingPoint
                                     .distanceTo(guessLocation);
 
-                            int addScore = calculateScore(validity,
+                            int addScore = calculateScore(validityOfAnswer,
                                     (int) distanceFromGuess,
                                     (int) metersFromPlayerPosition, COUNTDOWN_TIME);
 
                             App.CurrentGame.CURRENT_SCORE += addScore;
 
                             Log.d("addingToScore",
-                                    "validity: " + String.valueOf(validity)
+                                    "validity: " + String.valueOf(validityOfAnswer)
                                             + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
                                             + " metersFromPlayerPosition: " + String.valueOf((int) metersFromPlayerPosition)
                                             + " timeBonus: " + String.valueOf(COUNTDOWN_TIME)
@@ -488,7 +488,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             stopTimer();
 
-                            guessResultDialog(GuessActivity.this, message, right, rightAnswer,
+                            guessResultDialog(GuessActivity.this, message, isAnswerRight, rightAnswer,
                                     wrongLoc.getLatitude(), wrongLoc.getLongitude()).show();
                         }
                     }
