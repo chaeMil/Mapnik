@@ -36,7 +36,7 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Location loc = new Location("los");
+                Location loc = new Location("loc");
                 loc.setLatitude(customLocation.latitude);
                 loc.setLongitude(customLocation.longitude);
                 App.setStartingPoint(loc);
