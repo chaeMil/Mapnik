@@ -12,8 +12,10 @@ import cz.mapnik.app.R;
 
 public class PlayGames {
 
+    public static String ACHIEVEMENT_3_IN_ROW = "CgkIu8v476oMEAIQCA";
+
     public static void unlockAchievement(GoogleApiClient client, String achievementId) {
-        if(client != null) {
+        if(client != null && client.isConnected()) {
             Games.Achievements.unlock(client, achievementId);
         } else {
             /* TODO Alternative implementation (or warn user that they must
@@ -22,7 +24,7 @@ public class PlayGames {
     }
 
     public static void submitHighScore(GoogleApiClient client, String leaderboard, int score) {
-        if(client != null) {
+        if(client != null && client.isConnected()) {
             Games.Leaderboards.submitScore(client, leaderboard, score);
         } else {
             /* TODO Alternative implementation (or warn user that they must

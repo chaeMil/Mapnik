@@ -238,7 +238,14 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         mGoogleApiClient.connect();
 
+        App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
+
         setContentView(R.layout.activity_guess);
+
+        if (App.CurrentGame.GUESSES_IN_ROW == 3) {
+            PlayGames.unlockAchievement(mGoogleApiClient,
+                    PlayGames.ACHIEVEMENT_3_IN_ROW);
+        }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         if (Build.VERSION.SDK_INT >= 21) {
@@ -258,7 +265,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 if (answers != null) {
                     Basic.shuffleArray(answers);
                 }
-                Log.d("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
+                App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
                 createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
             }
@@ -494,6 +501,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 message += "\n\n" + getString(R.string.guess_distance) + " " +
                                         String.valueOf((long) distanceFromGuess) + "m";
 
+                                App.CurrentGame.GUESSES_IN_ROW = 0;
+                            } else {
+                                App.CurrentGame.GUESSES_IN_ROW += 1;
                             }
 
                             double metersFromPlayerPosition = App.startingPoint
