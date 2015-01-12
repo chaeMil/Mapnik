@@ -9,8 +9,6 @@ import android.widget.ImageView;
 
 public class ChooseVerifiedLocation extends Activity {
 
-    private Location startingLoc;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +25,7 @@ public class ChooseVerifiedLocation extends Activity {
     }
 
     private void setGameParameters(Double lat, Double lng, String course, int diameter) {
+        Location startingLoc = new Location("loc");
         startingLoc.setLatitude(lat);
         startingLoc.setLongitude(lng);
         App.setStartingPoint(startingLoc);
