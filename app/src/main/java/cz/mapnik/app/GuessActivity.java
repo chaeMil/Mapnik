@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -117,7 +116,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     } else {
                         if (panorama.getLocation() == null) {
                             App.retryCount += 1;
-                            Log.i("panoramaLocation", "not fixed on road, restarting activity ["
+                            App.log("panoramaLocation", "not fixed on road, restarting activity ["
                                     + App.retryCount + "]");
                             finish();
                             Intent i = new Intent(GuessActivity.this, GuessActivity.class);
@@ -151,8 +150,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 panoramaLatitude.setText(String.valueOf(panLatitude));
                                 panoramaLongitude.setText(String.valueOf(panLongitude));
 
-                                Log.d("panoramaLatitude", String.valueOf(panLatitude));
-                                Log.d("panoramaLongitude", String.valueOf(panLongitude));
+                                App.log("panoramaLatitude", String.valueOf(panLatitude));
+                                App.log("panoramaLongitude", String.valueOf(panLongitude));
 
                                 panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
                                 panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
@@ -182,8 +181,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
                 ANSWER_RADIUS);
 
-        Log.d("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
-        Log.d("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
+        App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
+        App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
 
         wrongAnswer1 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
                 wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
@@ -215,7 +214,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         double bonusValue = bonus * TIME_BONUS_VALUE;
 
         App.CurrentGame.ACTUAL_TIME_BONUS = bonusValue;
-        Log.d("bonus", String.valueOf(bonusValue));
+        App.log("bonus", String.valueOf(bonusValue));
 
         double score = (double) validity * ((double) metersFromPlayerPosition
                 - (double) metersFromActualLocation) + bonusValue;
@@ -318,8 +317,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 if (!hasUserLocation) {
                     lat = location.getLatitude();
                     lng = location.getLongitude();
-                    Log.d("lat", String.valueOf(lat));
-                    Log.d("lng", String.valueOf(lng));
+                    App.log("lat", String.valueOf(lat));
+                    App.log("lng", String.valueOf(lng));
                     userLatitude.setText(String.valueOf(lat));
                     userLongitude.setText(String.valueOf(lng));
                     hasUserLocation = true;
@@ -515,7 +514,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             App.CurrentGame.CURRENT_SCORE += addScore;
 
-                            Log.d("addingToScore",
+                            App.log("addingToScore",
                                     "validity: " + String.valueOf(validityOfAnswer)
                                             + " distanceFromGuess: " + String.valueOf((int) distanceFromGuess)
                                             + " metersFromPlayerPosition: " + String.valueOf((int) metersFromPlayerPosition)
