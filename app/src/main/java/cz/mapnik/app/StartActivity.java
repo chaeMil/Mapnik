@@ -96,41 +96,6 @@ public class StartActivity extends ActionBarActivity implements
         });
     }
 
-    /*public Dialog startDialog(ActionBarActivity a) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(a);
-        builder.setTitle(getString(R.string.start_game))
-                .setMessage(getString(R.string.choose_location))
-                .setPositiveButton(getString(R.string.select_city),new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(StartActivity.this, SelectCity.class);
-                        startActivity(i);
-                    }
-                })
-                .setNegativeButton(getString(R.string.use_my_location),new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        location = Map.getLastKnownLocation(getApplicationContext());
-                        if (location == null) {
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.user_location_not_available,
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            App.setStartingPoint(location);
-                            if (App.userAddress == null) {
-                                App.userAddress = Map.getAddressFromLatLng(StartActivity.this,
-                                        location.getLatitude(), location.getLongitude(), 1)
-                                        .get(0)
-                                        .getAddressLine(0);
-                            }
-                            Intent i = new Intent(StartActivity.this, ChooseDiameter.class);
-                            startActivity(i);
-                        }
-                    }
-                });
-        return builder.create();
-    }*/
-
     public Dialog startDialog(Activity a) {
         final Dialog dialog = new Dialog(a);
         dialog.setContentView(R.layout.start_dialog);
@@ -139,6 +104,7 @@ public class StartActivity extends ActionBarActivity implements
         Button myLocationBtn = (Button) dialog.findViewById(R.id.use_my_location);
         Button chooseLocationBtn = (Button) dialog.findViewById(R.id.choose_location);
         Button customLocationBtn = (Button) dialog.findViewById(R.id.custom_location);
+        Button verifiedLocationBtn = (Button) dialog.findViewById(R.id.verified_location);
 
         myLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +140,14 @@ public class StartActivity extends ActionBarActivity implements
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(StartActivity.this, ChooseCustomLocation.class);
+                startActivity(i);
+            }
+        });
+
+        verifiedLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(StartActivity.this, ChooseVerifiedLocation.class);
                 startActivity(i);
             }
         });

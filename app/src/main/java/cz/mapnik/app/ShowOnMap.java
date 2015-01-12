@@ -69,7 +69,7 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(true);
         map.getUiSettings().setAllGesturesEnabled(false);
-        map.getUiSettings().setZoomGesturesEnabled(true);
+        //map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);
 
         if(!rightAnswer) {
@@ -96,6 +96,6 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(guess,5));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location,10));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location,13));
     }
 }

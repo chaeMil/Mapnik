@@ -46,5 +46,6 @@
     <string name="action_achievements">Achievements</string>
     <string name="action_leaderboard">Leaderboard</string>
     <string name="leaderboard">Leaderboard</string>
+    <string name="verified_location">Verified courses!</string>
 
 </resources>

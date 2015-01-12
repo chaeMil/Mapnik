@@ -12,6 +12,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/verified_location"
+        android:id="@+id/verified_location"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/choose_location"
         android:id="@+id/choose_location"/>
 

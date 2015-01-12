@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -43,6 +44,10 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
                 startActivity(i);
             }
         });
+
+        TextView mapLabel = (TextView) findViewById(R.id.mapLabel);
+        mapLabel.setText(getString(R.string.custom_location).toUpperCase());
+        mapLabel.setVisibility(View.VISIBLE);
     }
 
     @Override
