@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +35,12 @@ import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
 
 import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
@@ -67,6 +72,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private boolean mAutoStartSignInflow = true;
     private boolean mSignInClicked = false;
 
+    private StreetViewPanoramaFragment streetViewPanoramaFragment;
     private String provider = null;
     private TextView userLatitude;
     private TextView userLongitude;
@@ -94,7 +100,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private CircleButton helpButton;
     private RelativeLayout helpsWrapper;
     private TextView helpsText;
+    private ProgressBar progressBar;
 
+    private boolean streetViewReady = false;
+    private boolean panAddressReady = false;
+    private boolean answersReady = false;
 
     @Override
     public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
@@ -102,6 +112,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             panorama.setPosition(getRandomNearbyLocation(lat, lng, GUESS_RADIUS), GUESS_SNAP_RADIUS);
             panorama.setStreetNamesEnabled(false);
             panorama.setUserNavigationEnabled(false);
+            panorama.setPanningGesturesEnabled(false); //before panorama is ready
+            panorama.setZoomGesturesEnabled(false); //before panorama is ready
             panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama
                     .OnStreetViewPanoramaChangeListener() {
                 @Override
@@ -143,7 +155,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             panLatitude = panorama.getLocation().position.latitude;
                             panLongitude = panorama.getLocation().position.longitude;
 
-                            List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
+                            final List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
                                     panLatitude, panLongitude, 1);
 
                             if (App.DEBUG) {
@@ -158,8 +170,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             }
 
                             //TODO crashes on slow connection (NUllPointerException)
-                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));
+                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));*/
+
+                            prepareUI(panorama);
                         }
                     }
                 }
@@ -168,9 +182,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         }
     }
 
-    public String[] createAnswers(ActionBarActivity a, double panLatitude,
-                                        double panLongitude, String rightAnswer) {
+    public void prepareUI(StreetViewPanorama panorama) {
+        guessButton.setVisibility(View.VISIBLE);
+        if(App.CurrentGame.CURRENT_GAME_HELPS > 0) {
+            helpsWrapper.setVisibility(View.VISIBLE);
+            helpsText.setText(String.valueOf(App.CurrentGame.CURRENT_GAME_HELPS));
+        }
+        timeBonusWrapper.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
+        panorama.setPanningGesturesEnabled(true);
+        panorama.setZoomGesturesEnabled(true);
+    }
+
+    public String[] createAnswers(final ActionBarActivity a, final double panLatitude,
+                                        final double panLongitude, final String rightAnswer) {
         GuessActivity.rightAnswer = rightAnswer;
 
         wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
@@ -225,6 +251,37 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_guess);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
+        }
+
+        streetViewPanoramaFragment = (StreetViewPanoramaFragment) getFragmentManager()
+                        .findFragmentById(R.id.streetviewpanorama);
+        streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
+
+        debugValues = (RelativeLayout) findViewById(R.id.debugValues);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        guessButton = (CircleButton) findViewById(R.id.guessButton);
+        helpButton = (CircleButton) findViewById(R.id.helpButton);
+        helpsWrapper = (RelativeLayout) findViewById(R.id.helpsWrapper);
+        helpsText = (TextView) findViewById(R.id.helpsText);
+        userLatitude = (TextView) findViewById(R.id.userLatitude);
+        userLongitude = (TextView) findViewById(R.id.userLongitude);
+        userAddress = (TextView) findViewById(R.id.userAddress);
+        panoramaLatitude = (TextView) findViewById(R.id.panoramaLatitude);
+        panoramaLongitude = (TextView) findViewById(R.id.panoramaLongitude);
+        panoramaAddress = (TextView) findViewById(R.id.panoramaAddress);
+        panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
+
+        Location location = App.startingPoint;
+
+        if(App.DEBUG) {
+            debugValues.setVisibility(View.VISIBLE);
+            userAddress.setText(App.userAddress);
+        }
 
         // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -237,27 +294,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         mGoogleApiClient.connect();
 
-        App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
-
-        setContentView(R.layout.activity_guess);
-
         if (App.CurrentGame.GUESSES_IN_ROW == 3) {
             PlayGames.unlockAchievement(mGoogleApiClient,
                     PlayGames.ACHIEVEMENT_3_IN_ROW);
         }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
-        }
+        App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
 
-        debugValues = (RelativeLayout) findViewById(R.id.debugValues);
-
-        if(App.DEBUG) {
-            debugValues.setVisibility(View.VISIBLE);
-        }
-
-        guessButton = (CircleButton) findViewById(R.id.guessButton);
         guessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,15 +312,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
             }
         });
-
-        helpButton = (CircleButton) findViewById(R.id.helpButton);
-        helpsWrapper = (RelativeLayout) findViewById(R.id.helpsWrapper);
-        helpsText = (TextView) findViewById(R.id.helpsText);
-
-        if(App.CurrentGame.CURRENT_GAME_HELPS > 0) {
-            helpsWrapper.setVisibility(View.VISIBLE);
-            helpsText.setText(String.valueOf(App.CurrentGame.CURRENT_GAME_HELPS));
-        }
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,24 +326,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 i.putExtra("locLatitude",panLatitude);
                 i.putExtra("locLongitude",panLongitude);
                 startActivity(i);
-                if (App.CurrentGame.CURRENT_GAME_HELPS == 0) {
-                    PlayGames.unlockAchievement(mGoogleApiClient, "CgkIu8v476oMEAIQAQ");
-                }
             }
         });
-
-        userLatitude = (TextView) findViewById(R.id.userLatitude);
-        userLongitude = (TextView) findViewById(R.id.userLongitude);
-        userAddress = (TextView) findViewById(R.id.userAddress);
-
-        panoramaLatitude = (TextView) findViewById(R.id.panoramaLatitude);
-        panoramaLongitude = (TextView) findViewById(R.id.panoramaLongitude);
-        panoramaAddress = (TextView) findViewById(R.id.panoramaAddress);
-        panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
-
-        userAddress.setText(App.userAddress);
-
-        Location location = App.startingPoint;
 
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -352,12 +370,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             userLatitude.setText("Location not available");
             userLongitude.setText("Location not available");
         }
-
-
-        StreetViewPanoramaFragment streetViewPanoramaFragment =
-                (StreetViewPanoramaFragment) getFragmentManager()
-                        .findFragmentById(R.id.streetviewpanorama);
-        streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
     public Dialog exitDialog(ActionBarActivity a) {
