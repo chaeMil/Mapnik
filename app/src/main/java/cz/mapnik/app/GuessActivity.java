@@ -170,8 +170,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             }
 
                             //TODO crashes on slow connection (NUllPointerException)
-                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));*/
+                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));
 
                             prepareUI(panorama);
                         }
