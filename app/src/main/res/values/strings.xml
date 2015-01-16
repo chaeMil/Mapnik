@@ -49,5 +49,6 @@
     <string name="verified_location">Verified courses!</string>
     <string name="unable_to_download_answers" translatable="false">Sorry, the game was unable to get answers</string>
     <string name="downloading_answers">Downloading answers</string>
+    <string name="show_leaderboard">show leaderboard</string>
 
 </resources>

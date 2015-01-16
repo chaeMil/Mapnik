@@ -196,6 +196,8 @@ public class StartActivity extends ActionBarActivity implements
     @Override
     public void onConnected(Bundle bundle) {
         location = Map.getLastKnownLocation(mGoogleApiClient);
+        Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
+                .findViewById(android.R.id.content));
     }
 
 

@@ -61,7 +61,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
     private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 10;
+    private static final int GAME_MAX_ROUNDS = 3;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
@@ -648,6 +648,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 submitScore.putExtra("score", App.CurrentGame.CURRENT_SCORE);
                 submitScore.putExtra("course", App.CurrentGame.COURSE);
                 submitScore.putExtra("diameter", App.CurrentGame.CURRENT_DIAMETER);
+                submitScore.putExtra("courseName", App.CurrentGame.COURSE_NAME);
 
             a.startActivity(submitScore);
 
@@ -725,7 +726,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
+                .findViewById(android.R.id.content));
     }
 
     protected void onActivityResult(int requestCode, int resultCode,

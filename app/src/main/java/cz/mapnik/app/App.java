@@ -28,6 +28,7 @@ public class App extends Application {
         CurrentGame.CURRENT_GAME_HELPS = 3;
         CurrentGame.GUESSES_IN_ROW = 0;
         CurrentGame.COURSE = null;
+        CurrentGame.COURSE_NAME = null;
 
     }
 
@@ -39,6 +40,7 @@ public class App extends Application {
         public static int CURRENT_GAME_HELPS = 3;
         public static int GUESSES_IN_ROW = 0;
         public static String COURSE = null;
+        public static String COURSE_NAME = null;
     }
 
     public static void setStartingPoint(Location startingPoint) {

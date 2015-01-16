@@ -37,5 +37,6 @@
     <string name="action_achievements">Úspěchy</string>
     <string name="verified_location">Ověřené lokace</string>
     <string name="downloading_answers">Stahuji odpovědi</string>
+    <string name="show_leaderboard">Ukázat žebříček</string>
 
 </resources>
