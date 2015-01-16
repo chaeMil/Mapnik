@@ -40,6 +40,7 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
                 loc.setLatitude(customLocation.latitude);
                 loc.setLongitude(customLocation.longitude);
                 App.setStartingPoint(loc);
+                App.CurrentGame.COURSE = "custom";
                 Intent i = new Intent(ChooseCustomLocation.this, ChooseDiameter.class);
                 startActivity(i);
             }

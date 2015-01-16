@@ -643,8 +643,14 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     "your score: " + App.CurrentGame.CURRENT_SCORE,
                     Toast.LENGTH_LONG).show();
             App.log("finished game with score:", String.valueOf(App.CurrentGame.CURRENT_SCORE));
-            PlayGames.submitHighScore(mGoogleApiClient, "CgkIu8v476oMEAIQBg",
-                    App.CurrentGame.CURRENT_SCORE);
+
+            Intent submitScore = new Intent(a, SubmitScore.class);
+                submitScore.putExtra("score", App.CurrentGame.CURRENT_SCORE);
+                submitScore.putExtra("course", App.CurrentGame.COURSE);
+                submitScore.putExtra("diameter", App.CurrentGame.CURRENT_DIAMETER);
+
+            a.startActivity(submitScore);
+
             App.resetCurrentGameOptions();
             a.finish();
         }

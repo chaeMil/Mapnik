@@ -4,8 +4,6 @@ import android.app.Application;
 import android.location.Location;
 import android.util.Log;
 
-import java.util.Locale;
-
 /**
  * Created by chaemil on 3.1.15.
  */
@@ -29,7 +27,7 @@ public class App extends Application {
         CurrentGame.CURRENT_DIAMETER = 0;
         CurrentGame.CURRENT_GAME_HELPS = 3;
         CurrentGame.GUESSES_IN_ROW = 0;
-        CurrentGame.VERIFIED_COURSE = null;
+        CurrentGame.COURSE = null;
 
     }
 
@@ -40,7 +38,7 @@ public class App extends Application {
         public static int CURRENT_DIAMETER = 0;
         public static int CURRENT_GAME_HELPS = 3;
         public static int GUESSES_IN_ROW = 0;
-        public static String VERIFIED_COURSE = null;
+        public static String COURSE = null;
     }
 
     public static void setStartingPoint(Location startingPoint) {

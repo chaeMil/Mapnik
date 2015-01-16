@@ -125,6 +125,7 @@ public class StartActivity extends ActionBarActivity implements
                                 .get(0)
                                 .getAddressLine(0);
                     }
+                    App.CurrentGame.COURSE = "userLocation";
                     Intent i = new Intent(StartActivity.this, ChooseDiameter.class);
                     startActivity(i);
                 }
