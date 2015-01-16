@@ -244,13 +244,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 panoramaAddress.setText(panAddress.get(0).getAddressLine(0));
                                 panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
                             }
-
-
-                            //TODO crashes on slow connection (NUllPointerException)
-                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));*/
-
-
                         }
                     }
                 }
