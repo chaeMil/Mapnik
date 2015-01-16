@@ -36,5 +36,6 @@
     <string name="action_leaderboard">Žebříček</string>
     <string name="action_achievements">Úspěchy</string>
     <string name="verified_location">Ověřené lokace</string>
+    <string name="downloading_answers">Stahuji odpovědi</string>
 
 </resources>

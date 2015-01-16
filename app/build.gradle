@@ -26,5 +26,6 @@ dependencies {
     //compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.github.markushi:circlebutton:1.1'
     compile 'com.github.filippudak.progresspieview:library:1.0.+'
+    compile 'com.pnikosis:materialish-progress:1.2'
     compile project(':BaseGameUtils')
 }

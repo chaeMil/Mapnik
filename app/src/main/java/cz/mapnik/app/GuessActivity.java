@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -101,9 +101,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private CircleButton helpButton;
     private RelativeLayout helpsWrapper;
     private TextView helpsText;
-    private ProgressBar progressBar;
+    private ProgressWheel progressBar;
     private Geocoder geocoder;
     private List<Address> panAddress;
+    private RelativeLayout downloadingAnswersWrapper;
 
     public static interface Callback {
         public void onComplete(String[] answers);
@@ -321,7 +322,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
 
         debugValues = (RelativeLayout) findViewById(R.id.debugValues);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
         guessButton = (CircleButton) findViewById(R.id.guessButton);
         helpButton = (CircleButton) findViewById(R.id.helpButton);
         helpsWrapper = (RelativeLayout) findViewById(R.id.helpsWrapper);
@@ -335,6 +336,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
         countdown = (ProgressPieView) findViewById(R.id.countdown);
         timeBonusWrapper = (RelativeLayout) findViewById(R.id.timeBonusWrapper);
+        downloadingAnswersWrapper = (RelativeLayout) findViewById(R.id.downloading_answers_wrapper);
 
         geocoder = new Geocoder(getApplicationContext());
 
@@ -358,10 +360,28 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             @Override
             public void onClick(View v) {
                 if (answers != null) {
-                    Basic.shuffleArray(answers);
-                    App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
-                    int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
-                    createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
+                    displayGuessDialog(answers);
+                } else {
+                    App.log("ReverseGeocoderTask was unable to get answers: ", "downloading again");
+
+                    downloadingAnswersWrapper.setVisibility(View.VISIBLE);
+
+                    ReverseGeocoderTask getAnswers = new ReverseGeocoderTask(geocoder, panLatitude,
+                            panLongitude, new Callback() {
+                        @Override
+                        public void onComplete(String[] answers) {
+                            createAnswers(answers);
+                            downloadingAnswersWrapper.setVisibility(View.GONE);
+                            if (answers != null) {
+                                displayGuessDialog(answers);
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.unable_to_download_answers),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    getAnswers.execute();
                 }
             }
         });
@@ -423,6 +443,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             userLatitude.setText("Location not available");
             userLongitude.setText("Location not available");
         }
+    }
+
+    public void displayGuessDialog(String[] answers) {
+        Basic.shuffleArray(answers);
+        App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
+        int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
+        createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
     }
 
     public Dialog exitDialog(ActionBarActivity a) {

@@ -2,5 +2,6 @@
 <resources>
     <color name="bright_green">#ff27a44c</color>
     <color name="bright_green_alpha">#5527a44c</color>
+    <color name="dark_green">#026057</color>
     <color name="bright_purple">#4c27a3</color>
 </resources>
