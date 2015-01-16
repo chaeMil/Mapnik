@@ -88,7 +88,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static String rightAnswer;
     private String wrongAnswer1;
     private String wrongAnswer2;
-    private String[] answers;
+    private String[] answers = null;
     private LatLng wrongAnswer1Location;
     private LatLng wrongAnswer2Location;
     private double panLatitude;
@@ -104,12 +104,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private ProgressBar progressBar;
     private Geocoder geocoder;
     private List<Address> panAddress;
-
-
-    private boolean streetViewReady = false;
-    private boolean panAddressReady = false;
-    private boolean answersReady = false;
-
 
     public static interface Callback {
         public void onComplete(String[] answers);
@@ -162,11 +156,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                 return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
 
-            } catch (IOException ex) {
-                //value = MenuHelper.EMPTY_STRING;
-                Log.e(TAG, "Geocoder exception: ", ex);
-            } catch (RuntimeException ex) {
-                //value = MenuHelper.EMPTY_STRING;
+            } catch (IOException | RuntimeException ex) {
+
                 Log.e(TAG, "Geocoder exception: ", ex);
             }
             return value;
@@ -368,10 +359,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             public void onClick(View v) {
                 if (answers != null) {
                     Basic.shuffleArray(answers);
+                    App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
+                    int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
+                    createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
                 }
-                App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
-                int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
-                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
             }
         });
 
