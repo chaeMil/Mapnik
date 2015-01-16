@@ -1,30 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_margin="8dp">
 
-    <Button
+    <info.hoang8f.widget.FButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="0dp"
+        android:id="@+id/use_my_location"
+        fbutton:buttonColor="@color/bright_green"
+        fbutton:shadowColor="@color/dark_green"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="5dp"
+        android:textColor="@color/dark_green"
+        android:text="@string/use_my_location" />
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/use_my_location"
-        android:id="@+id/use_my_location"/>
+        android:id="@+id/use_my_location"/>-->
 
-    <Button
+    <info.hoang8f.widget.FButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/verified_location"
+        fbutton:buttonColor="@color/bright_green"
+        fbutton:shadowColor="@color/dark_green"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="5dp"
+        android:textColor="@color/dark_green"
+        android:text="@string/verified_location" />
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/verified_location"
-        android:id="@+id/verified_location"/>
+        android:id="@+id/verified_location"/>-->
 
-    <Button
+    <info.hoang8f.widget.FButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/choose_location"
+        fbutton:buttonColor="@color/bright_green"
+        fbutton:shadowColor="@color/dark_green"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="5dp"
+        android:textColor="@color/dark_green"
+        android:text="@string/choose_location" />
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/choose_location"
-        android:id="@+id/choose_location"/>
+        android:id="@+id/choose_location"/>-->
 
-    <Button
+    <info.hoang8f.widget.FButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/custom_location"
+        fbutton:buttonColor="@color/bright_green"
+        fbutton:shadowColor="@color/dark_green"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="5dp"
+        android:textColor="@color/dark_green"
+        android:text="@string/custom_location" />
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/custom_location"
-        android:id="@+id/custom_location"/>
+        android:id="@+id/custom_location"/>-->
 
 </LinearLayout>
