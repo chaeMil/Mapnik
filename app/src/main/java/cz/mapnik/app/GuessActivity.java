@@ -112,11 +112,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
 
     public static interface Callback {
-        public void onComplete(List<Address> location);
+        public void onComplete(String[] answers);
     }
 
     // Reverse geocoding may take a long time to return so we put it in AsyncTask.
-    public class ReverseGeocoderTask extends AsyncTask<Void, Void, List<Address>> {
+    public class ReverseGeocoderTask extends AsyncTask<Void, Void, String[]> {
 
         private static final String TAG = "ReverseGeocoder";
         private Geocoder mGeocoder;
@@ -130,16 +130,38 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             mCallback = callback;
         }
         @Override
-        protected List<Address> doInBackground(Void... params) {
-            List<Address> value = null;
+        protected String[] doInBackground(Void... params) {
+            String[] value = null;
             try {
-                /*StringBuilder sb = new StringBuilder();
-                for (Address addr : address) {
-                    int index = addr.getMaxAddressLineIndex();
-                    sb.append(addr.getAddressLine(index));
-                }
-                value = sb.toString();*/
-                return mGeocoder.getFromLocation(mLat, mLng, 1);
+
+                GuessActivity.rightAnswer = mGeocoder.getFromLocation(mLat, mLng, 1)
+                        .get(0).getAddressLine(0);
+
+                wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+                        ANSWER_RADIUS);
+
+                wrongAnswer2Location = Map.getRandomNearbyLocation(
+                        panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
+                                WRONG_ANSWER_LATLNG_CORRECTION),
+                        panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
+                                WRONG_ANSWER_LATLNG_CORRECTION),
+                        ANSWER_RADIUS);
+
+                App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
+                App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
+
+                /*wrongAnswer1 = Map.getAddressFromLatLng(getParent(), wrongAnswer1Location.latitude,
+                        wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
+                wrongAnswer2 = Map.getAddressFromLatLng(getParent(), wrongAnswer1Location.latitude,
+                        wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);*/
+
+                wrongAnswer1 = mGeocoder.getFromLocation(wrongAnswer1Location.latitude,
+                        wrongAnswer1Location.longitude, 1).get(0).getAddressLine(0);
+                wrongAnswer2 = mGeocoder.getFromLocation(wrongAnswer2Location.latitude,
+                        wrongAnswer2Location.longitude, 1).get(0).getAddressLine(0);
+
+                return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
+
             } catch (IOException ex) {
                 //value = MenuHelper.EMPTY_STRING;
                 Log.e(TAG, "Geocoder exception: ", ex);
@@ -150,8 +172,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             return value;
         }
         @Override
-        protected void onPostExecute(List<Address> location) {
-            mCallback.onComplete(location);
+        protected void onPostExecute(String[] answers) {
+            mCallback.onComplete(answers);
         }
     }
 
@@ -191,13 +213,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                         , Toast.LENGTH_SHORT).show();
                             }
 
-                            COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
-                            countdown = (ProgressPieView) findViewById(R.id.countdown);
-                            timer = new MyCount(TIME_BONUS_COUNTDOWN_SECONDS * 1000, 1000);
-                            timer.start();
-
-                            timeBonusWrapper = (RelativeLayout) findViewById(R.id.timeBonusWrapper);
-
                             App.CurrentGame.CURRENT_ROUND += 1;
 
                             App.retryCount = 0;
@@ -208,17 +223,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             /*final List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
                                     panLatitude, panLongitude, 1);*/
 
-                            ReverseGeocoderTask getPanAddress = new ReverseGeocoderTask(geocoder,
-                                    panLatitude, panLongitude, new Callback() {
+                            ReverseGeocoderTask getPanAddressAndCreateAnswers = new ReverseGeocoderTask(
+                                    geocoder, panLatitude, panLongitude, new Callback() {
                                 @Override
-                                public void onComplete(List<Address> location) {
-                                    panAddress = location;
-                                    App.log("panAddress", panAddress.get(0).getAddressLine(0));
-                                    /*answers = createAnswers(GuessActivity.this, panLatitude,
-                                            panLongitude, panAddress.get(0).getAddressLine(0));*/
+                                public void onComplete(String[] answers) {
+                                    createAnswers(answers);
+                                    prepareUI(panorama);
                                 }
                             });
-                            getPanAddress.execute();
+                            getPanAddressAndCreateAnswers.execute();
 
 
                             if (App.DEBUG) {
@@ -237,7 +250,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
                                     panAddress.get(0).getAddressLine(0));*/
 
-                            prepareUI(panorama);
+
                         }
                     }
                 }
@@ -257,29 +270,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         panorama.setPanningGesturesEnabled(true);
         panorama.setZoomGesturesEnabled(true);
+
+        COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
+
+        timer = new MyCount(TIME_BONUS_COUNTDOWN_SECONDS * 1000, 1000);
+        timer.start();
     }
 
-    public String[] createAnswers(final ActionBarActivity a, final double panLatitude,
-                                        final double panLongitude, final String rightAnswer) {
-        GuessActivity.rightAnswer = rightAnswer;
-
-        wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
-                ANSWER_RADIUS);
-
-        wrongAnswer2Location = Map.getRandomNearbyLocation(
-                panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
-                panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,WRONG_ANSWER_LATLNG_CORRECTION),
-                ANSWER_RADIUS);
-
-        App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
-        App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
-
-        wrongAnswer1 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
-                wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
-        wrongAnswer2 = Map.getAddressFromLatLng(a, wrongAnswer1Location.latitude,
-                wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);
-
-        return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
+    public void createAnswers(String[] a) {
+        answers = a;
     }
 
     public static int calculateScore(int validity, int metersFromActualLocation,
@@ -350,6 +349,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         panoramaLongitude = (TextView) findViewById(R.id.panoramaLongitude);
         panoramaAddress = (TextView) findViewById(R.id.panoramaAddress);
         panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
+        countdown = (ProgressPieView) findViewById(R.id.countdown);
+        timeBonusWrapper = (RelativeLayout) findViewById(R.id.timeBonusWrapper);
 
         geocoder = new Geocoder(getApplicationContext());
 
@@ -372,12 +373,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         guessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (answers != null) {
+                if (answers != null) {
                     Basic.shuffleArray(answers);
                 }
                 App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
-                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();*/
+                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
             }
         });
 
@@ -485,12 +486,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(GuessActivity.this, ShowOnMap.class);
-                        i.putExtra("rightAnswer",rightAnswer);
-                        i.putExtra("locLatitude",panLatitude);
-                        i.putExtra("locLongitude",panLongitude);
-                        i.putExtra("guessLatitude",guessLatitude);
+                        i.putExtra("rightAnswer", rightAnswer);
+                        i.putExtra("locLatitude", panLatitude);
+                        i.putExtra("locLongitude", panLongitude);
+                        i.putExtra("guessLatitude", guessLatitude);
                         i.putExtra("guessLongitude", guessLongitude);
-                        i.putExtra("rightLocation",rightLocation);
+                        i.putExtra("rightLocation", rightLocation);
                         startActivity(i);
                     }
                 });
