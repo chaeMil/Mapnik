@@ -73,7 +73,7 @@ public class StartActivity extends ActionBarActivity implements
 
         mGoogleApiClient.connect();
 
-        App.resetCurrentGameOptions();
+        //App.resetCurrentGameOptions();
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         if (Build.VERSION.SDK_INT >= 21) {

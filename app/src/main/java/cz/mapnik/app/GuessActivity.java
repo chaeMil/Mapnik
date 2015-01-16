@@ -8,12 +8,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +38,9 @@ import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
 
 import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
@@ -58,8 +58,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int ANSWER_RADIUS = 1000;
     private static final double WRONG_ANSWER_LATLNG_CORRECTION = 0.08;
     private static final int GUESS_RADIUS = App.CurrentGame.CURRENT_DIAMETER;
-    private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
-    private static final int MAX_RETRY_VALUE = 10;
+    //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
+    private static final int GUESS_SNAP_RADIUS = 500;
+    private static final int MAX_RETRY_VALUE = 3;
     private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
@@ -101,15 +102,64 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private RelativeLayout helpsWrapper;
     private TextView helpsText;
     private ProgressBar progressBar;
+    private Geocoder geocoder;
+    private List<Address> panAddress;
+
 
     private boolean streetViewReady = false;
     private boolean panAddressReady = false;
     private boolean answersReady = false;
 
+
+    public static interface Callback {
+        public void onComplete(List<Address> location);
+    }
+
+    // Reverse geocoding may take a long time to return so we put it in AsyncTask.
+    public class ReverseGeocoderTask extends AsyncTask<Void, Void, List<Address>> {
+
+        private static final String TAG = "ReverseGeocoder";
+        private Geocoder mGeocoder;
+        private double mLat;
+        private double mLng;
+        private Callback mCallback;
+        public ReverseGeocoderTask(Geocoder geocoder, double lat, double lng, Callback callback) {
+            mGeocoder = geocoder;
+            mLat = lat;
+            mLng = lng;
+            mCallback = callback;
+        }
+        @Override
+        protected List<Address> doInBackground(Void... params) {
+            List<Address> value = null;
+            try {
+                /*StringBuilder sb = new StringBuilder();
+                for (Address addr : address) {
+                    int index = addr.getMaxAddressLineIndex();
+                    sb.append(addr.getAddressLine(index));
+                }
+                value = sb.toString();*/
+                return mGeocoder.getFromLocation(mLat, mLng, 1);
+            } catch (IOException ex) {
+                //value = MenuHelper.EMPTY_STRING;
+                Log.e(TAG, "Geocoder exception: ", ex);
+            } catch (RuntimeException ex) {
+                //value = MenuHelper.EMPTY_STRING;
+                Log.e(TAG, "Geocoder exception: ", ex);
+            }
+            return value;
+        }
+        @Override
+        protected void onPostExecute(List<Address> location) {
+            mCallback.onComplete(location);
+        }
+    }
+
     @Override
     public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
         if(hasUserLocation) {
             panorama.setPosition(getRandomNearbyLocation(lat, lng, GUESS_RADIUS), GUESS_SNAP_RADIUS);
+            App.log("guessRadius", String.valueOf(GUESS_RADIUS)+"m");
             panorama.setStreetNamesEnabled(false);
             panorama.setUserNavigationEnabled(false);
             panorama.setPanningGesturesEnabled(false); //before panorama is ready
@@ -155,8 +205,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                             panLatitude = panorama.getLocation().position.latitude;
                             panLongitude = panorama.getLocation().position.longitude;
 
-                            final List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
-                                    panLatitude, panLongitude, 1);
+                            /*final List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
+                                    panLatitude, panLongitude, 1);*/
+
+                            ReverseGeocoderTask getPanAddress = new ReverseGeocoderTask(geocoder,
+                                    panLatitude, panLongitude, new Callback() {
+                                @Override
+                                public void onComplete(List<Address> location) {
+                                    panAddress = location;
+                                    App.log("panAddress", panAddress.get(0).getAddressLine(0));
+                                    /*answers = createAnswers(GuessActivity.this, panLatitude,
+                                            panLongitude, panAddress.get(0).getAddressLine(0));*/
+                                }
+                            });
+                            getPanAddress.execute();
+
 
                             if (App.DEBUG) {
                                 panoramaLatitude.setText(String.valueOf(panLatitude));
@@ -169,9 +232,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 panoramaAddress2.setText(panAddress.get(0).getAddressLine(1));
                             }
 
+
                             //TODO crashes on slow connection (NUllPointerException)
-                            answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
-                                    panAddress.get(0).getAddressLine(0));
+                            /*answers = createAnswers(GuessActivity.this, panLatitude, panLongitude,
+                                    panAddress.get(0).getAddressLine(0));*/
 
                             prepareUI(panorama);
                         }
@@ -253,6 +317,17 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
 
+        // Create the Google Api Client with access to Plus and Games
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                        // add other APIs and scopes here as needed
+                .build();
+
+        mGoogleApiClient.connect();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
@@ -276,6 +351,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         panoramaAddress = (TextView) findViewById(R.id.panoramaAddress);
         panoramaAddress2 = (TextView) findViewById(R.id.panoramaAddress2);
 
+        geocoder = new Geocoder(getApplicationContext());
+
         Location location = App.startingPoint;
 
         if(App.DEBUG) {
@@ -283,16 +360,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             userAddress.setText(App.userAddress);
         }
 
-        // Create the Google Api Client with access to Plus and Games
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                        // add other APIs and scopes here as needed
-                .build();
 
-        mGoogleApiClient.connect();
 
         if (App.CurrentGame.GUESSES_IN_ROW == 3) {
             PlayGames.unlockAchievement(mGoogleApiClient,
@@ -304,12 +372,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         guessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (answers != null) {
+                /*if (answers != null) {
                     Basic.shuffleArray(answers);
                 }
                 App.log("rightAnswerIndex", String.valueOf(Arrays.asList(answers).indexOf(rightAnswer)));
                 int rightAnswerIndex = Arrays.asList(answers).indexOf(rightAnswer);
-                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();
+                createGuessDialog(GuessActivity.this, answers, rightAnswerIndex).show();*/
             }
         });
 

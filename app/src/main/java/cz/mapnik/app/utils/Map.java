@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import cz.mapnik.app.App;
+
 /**
  * Created by chaemil on 2.1.15.
  */
@@ -40,8 +42,8 @@ public class Map {
         double foundLongitude = new_x + longitude;
         double foundLatitude = y + latitude;
 
-        //Log.d("foundLatitude", String.valueOf(foundLatitude));
-        //Log.d("foundLongitude", String.valueOf(foundLongitude));
+        App.log("foundLatitude", String.valueOf(foundLatitude));
+        App.log("foundLongitude", String.valueOf(foundLongitude));
 
         return new LatLng(foundLatitude, foundLongitude);
         //System.out.println("Longitude: " + foundLongitude + "  Latitude: " + foundLatitude );
