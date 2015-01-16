@@ -9,6 +9,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -62,14 +64,16 @@ public class Map {
         return addresses;
     }
 
-    public static Location getLastKnownLocation(Context c) {
+    public static Location getLastKnownLocation(GoogleApiClient client) {
         // Get the location manager
-        LocationManager locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
+        //LocationManager locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
         // Define the criteria how to select the location provider -> use
         // default
-        Criteria criteria = new Criteria();
+        /*Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
-        return locationManager.getLastKnownLocation(provider);
+        return locationManager.getLastKnownLocation(provider);*/
+
+        return LocationServices.FusedLocationApi.getLastLocation(client);
     }
 
     public static Location getLocationFromAddress(Activity a, String address) {

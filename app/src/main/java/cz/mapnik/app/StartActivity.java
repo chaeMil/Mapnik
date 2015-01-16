@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
@@ -66,6 +67,7 @@ public class StartActivity extends ActionBarActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .addApi(LocationServices.API)
                         // add other APIs and scopes here as needed
                 .build();
 
@@ -111,7 +113,6 @@ public class StartActivity extends ActionBarActivity implements
         myLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                location = Map.getLastKnownLocation(getApplicationContext());
                 if (location == null) {
                     Toast.makeText(getApplicationContext(),
                             R.string.user_location_not_available,
@@ -193,7 +194,7 @@ public class StartActivity extends ActionBarActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        location = Map.getLastKnownLocation(mGoogleApiClient);
     }
 
 
