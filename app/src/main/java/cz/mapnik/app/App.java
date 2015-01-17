@@ -29,13 +29,13 @@ public class App extends Application {
         CurrentGame.GUESSES_IN_ROW = 0;
         CurrentGame.COURSE = null;
         CurrentGame.COURSE_NAME = null;
-
+        App.log("resetCurrentGameOptions","done!");
     }
 
     public static class CurrentGame {
         public static int CURRENT_ROUND = 1;
         public static int CURRENT_SCORE = 0;
-        public static double ACTUAL_TIME_BONUS = 1;
+        public static int ACTUAL_TIME_BONUS = 1;
         public static int CURRENT_DIAMETER = 0;
         public static int CURRENT_GAME_HELPS = 3;
         public static int GUESSES_IN_ROW = 0;

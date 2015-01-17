@@ -298,7 +298,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         double bonusValue = bonus * TIME_BONUS_VALUE;
 
-        App.CurrentGame.ACTUAL_TIME_BONUS = bonusValue;
+        App.CurrentGame.ACTUAL_TIME_BONUS = (int) bonusValue;
         App.log("bonus", String.valueOf(bonusValue));
 
         double score = (double) validity * ((double) metersFromPlayerPosition
@@ -497,7 +497,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         if(App.CurrentGame.ACTUAL_TIME_BONUS > 1) {
             Toast.makeText(getApplicationContext(), getString(R.string.time_bonus).toUpperCase() +
-                    " +" + Basic.round(App.CurrentGame.ACTUAL_TIME_BONUS,0),
+                    " +" + App.CurrentGame.ACTUAL_TIME_BONUS,
                     Toast.LENGTH_SHORT).show();
         }
 
