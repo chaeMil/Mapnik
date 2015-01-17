@@ -18,6 +18,7 @@
         fbutton:shadowHeight="3dp"
         fbutton:cornerRadius="5dp"
         android:textColor="@color/dark_green"
+        android:textAllCaps="true"
         android:text="@string/use_my_location" />
 
     <!--<Button
@@ -37,6 +38,7 @@
         fbutton:shadowHeight="3dp"
         fbutton:cornerRadius="5dp"
         android:textColor="@color/dark_green"
+        android:textAllCaps="true"
         android:text="@string/verified_location" />
 
     <!--<Button
@@ -56,6 +58,7 @@
         fbutton:shadowHeight="3dp"
         fbutton:cornerRadius="5dp"
         android:textColor="@color/dark_green"
+        android:textAllCaps="true"
         android:text="@string/choose_location" />
 
     <!--<Button
@@ -75,6 +78,7 @@
         fbutton:shadowHeight="3dp"
         fbutton:cornerRadius="5dp"
         android:textColor="@color/dark_green"
+        android:textAllCaps="true"
         android:text="@string/custom_location" />
 
     <!--<Button

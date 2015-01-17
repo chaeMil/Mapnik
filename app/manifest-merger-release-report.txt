@@ -48,6 +48,9 @@ MERGED from com.android.support:support-v4:21.0.2:16:5
 MERGED from com.github.markushi:circlebutton:1.1:9:5
 MERGED from com.github.filippudak.progresspieview:library:1.0.4:11:5
 MERGED from com.android.support:support-v4:21.0.2:16:5
+MERGED from com.pnikosis:materialish-progress:1.2:11:5
+MERGED from com.android.support:appcompat-v7:21.0.2:16:5
+MERGED from com.android.support:support-v4:21.0.2:16:5
 MERGED from Mapnik:BaseGameUtils:unspecified:30:5
 MERGED from com.android.support:appcompat-v7:21.0.2:16:5
 MERGED from com.android.support:support-v4:21.0.2:16:5
@@ -132,26 +135,34 @@ ADDED from AndroidManifest.xml:58:9
 		ADDED from AndroidManifest.xml:60:13
 	android:name
 		ADDED from AndroidManifest.xml:58:19
-meta-data#com.google.android.maps.v2.API_KEY
+activity#cz.mapnik.app.SubmitScore
 ADDED from AndroidManifest.xml:63:9
-	android:name
-		ADDED from AndroidManifest.xml:63:20
-	android:value
+	android:label
 		ADDED from AndroidManifest.xml:64:13
+	android:theme
+		ADDED from AndroidManifest.xml:65:13
+	android:name
+		ADDED from AndroidManifest.xml:63:19
+meta-data#com.google.android.maps.v2.API_KEY
+ADDED from AndroidManifest.xml:68:9
+	android:name
+		ADDED from AndroidManifest.xml:68:20
+	android:value
+		ADDED from AndroidManifest.xml:69:13
 meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:66:9
+ADDED from AndroidManifest.xml:71:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:name
-		ADDED from AndroidManifest.xml:67:13
+		ADDED from AndroidManifest.xml:72:13
 	android:value
-		ADDED from AndroidManifest.xml:68:13
+		ADDED from AndroidManifest.xml:73:13
 meta-data#com.google.android.gms.games.APP_ID
-ADDED from AndroidManifest.xml:70:9
+ADDED from AndroidManifest.xml:75:9
 	android:name
-		ADDED from AndroidManifest.xml:70:20
+		ADDED from AndroidManifest.xml:75:20
 	android:value
-		ADDED from AndroidManifest.xml:71:13
+		ADDED from AndroidManifest.xml:76:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.2:15:5
@@ -161,6 +172,10 @@ MERGED from com.android.support:support-v4:21.0.2:15:5
 MERGED from com.github.markushi:circlebutton:1.1:7:5
 MERGED from com.github.filippudak.progresspieview:library:1.0.4:7:5
 MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from com.pnikosis:materialish-progress:1.2:7:5
+MERGED from com.android.support:appcompat-v7:21.0.2:15:5
+MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from info.hoang8f:fbutton:1.0.5:7:5
 MERGED from Mapnik:BaseGameUtils:unspecified:22:5
 MERGED from com.android.support:appcompat-v7:21.0.2:15:5
 MERGED from com.android.support:support-v4:21.0.2:15:5

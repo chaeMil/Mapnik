@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +40,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,7 +65,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
     private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 3;
+    private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
@@ -105,6 +109,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private Geocoder geocoder;
     private List<Address> panAddress;
     private RelativeLayout downloadingAnswersWrapper;
+    private TextView courseName;
 
     public static interface Callback {
         public void onComplete(String[] answers);
@@ -127,8 +132,15 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         @Override
         protected String[] doInBackground(Void... params) {
             String[] value = null;
-            try {
 
+            if (!mGeocoder.isPresent()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext())
+                        .setTitle(getString(R.string.geocoder_error))
+                        .setMessage(getString(R.string.geocoder_is_not_present))
+                        .setCancelable(true);
+                builder.create().show();
+            }
+            try {
                 GuessActivity.rightAnswer = mGeocoder.getFromLocation(mLat, mLng, 1)
                         .get(0).getAddressLine(0);
 
@@ -138,29 +150,25 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 wrongAnswer2Location = Map.getRandomNearbyLocation(
                         panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
                                 WRONG_ANSWER_LATLNG_CORRECTION),
-                        panLongitude  + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
+                        panLongitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
                                 WRONG_ANSWER_LATLNG_CORRECTION),
                         ANSWER_RADIUS);
 
                 App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
                 App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
 
-                /*wrongAnswer1 = Map.getAddressFromLatLng(getParent(), wrongAnswer1Location.latitude,
-                        wrongAnswer1Location.longitude,1).get(0).getAddressLine(0);
-                wrongAnswer2 = Map.getAddressFromLatLng(getParent(), wrongAnswer1Location.latitude,
-                        wrongAnswer2Location.longitude,1).get(0).getAddressLine(0);*/
-
                 wrongAnswer1 = mGeocoder.getFromLocation(wrongAnswer1Location.latitude,
                         wrongAnswer1Location.longitude, 1).get(0).getAddressLine(0);
                 wrongAnswer2 = mGeocoder.getFromLocation(wrongAnswer2Location.latitude,
                         wrongAnswer2Location.longitude, 1).get(0).getAddressLine(0);
 
-                return new String[]{wrongAnswer1,wrongAnswer2,rightAnswer};
+                return new String[]{wrongAnswer1, wrongAnswer2, rightAnswer};
 
-            } catch (IOException | RuntimeException ex) {
+            }catch(IOException | RuntimeException ex){
 
                 Log.e(TAG, "Geocoder exception: ", ex);
             }
+
             return value;
         }
         @Override
@@ -256,6 +264,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         panorama.setPanningGesturesEnabled(true);
         panorama.setZoomGesturesEnabled(true);
 
+        courseName.setText(App.CurrentGame.COURSE_NAME);
+        courseName.setVisibility(View.VISIBLE);
+
         COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
 
         timer = new MyCount(TIME_BONUS_COUNTDOWN_SECONDS * 1000, 1000);
@@ -301,6 +312,24 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < 21) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // create our manager instance after the content view is set
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            // enable status bar tint
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setTintColor(getResources().getColor(R.color.bright_green));
+        }
+
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
+        }
+
         // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -312,10 +341,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         mGoogleApiClient.connect();
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
-        }
 
         streetViewPanoramaFragment = (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.streetviewpanorama);
@@ -337,6 +362,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         countdown = (ProgressPieView) findViewById(R.id.countdown);
         timeBonusWrapper = (RelativeLayout) findViewById(R.id.timeBonusWrapper);
         downloadingAnswersWrapper = (RelativeLayout) findViewById(R.id.downloading_answers_wrapper);
+        courseName = (TextView) findViewById(R.id.courseName);
 
         geocoder = new Geocoder(getApplicationContext());
 

@@ -28,5 +28,6 @@ dependencies {
     compile 'com.github.filippudak.progresspieview:library:1.0.+'
     compile 'com.pnikosis:materialish-progress:1.2'
     compile 'info.hoang8f:fbutton:1.0.5'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile project(':BaseGameUtils')
 }

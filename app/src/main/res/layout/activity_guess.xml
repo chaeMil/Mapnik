@@ -95,6 +95,23 @@
         android:gravity="right"
         android:fitsSystemWindows="true">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="courseName"
+            android:id="@+id/courseName"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/helpsWrapper"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp" />
+
         <RelativeLayout
             android:visibility="gone"
             android:id="@+id/timeBonusWrapper"

@@ -2,4 +2,20 @@
 <resources>
     <string name="app_id" translatable="false">423825909179</string>
     <string name="google_maps_api_key" translatable="false">AIzaSyDBe0Ev3aL5Rotr6jkwv_e7Xzv_vtTgNBE</string>
+
+    <string name="achievement_3_in_a_row">CgkIu8v476oMEAIQCA</string>
+    <string name="achievement_5_in_a_row">CgkIu8v476oMEAIQCQ</string>
+    <string name="achievement_test_achievement_1">CgkIu8v476oMEAIQAQ</string>
+    <string name="achievement_test_achievement_2">CgkIu8v476oMEAIQAg</string>
+    <string name="achievement_test_achievement_3">CgkIu8v476oMEAIQAw</string>
+    <string name="achievement_test_achievement_4">CgkIu8v476oMEAIQBA</string>
+    <string name="achievement_test_achievement_5">CgkIu8v476oMEAIQBQ</string>
+    <string name="leaderboard_3k_player_location">CgkIu8v476oMEAIQCg</string>
+    <string name="leaderboard_5k_player_location">CgkIu8v476oMEAIQCw</string>
+    <string name="leaderboard_10k_player_location">CgkIu8v476oMEAIQDA</string>
+    <string name="leaderboard_prague_10k_verified">CgkIu8v476oMEAIQDQ</string>
+    <string name="leaderboard_london_10k_verified">CgkIu8v476oMEAIQDg</string>
+    <string name="leaderboard_player_location_high_score">CgkIu8v476oMEAIQBg</string>
+    <string name="leaderboard_berlin_10k_verified">CgkIu8v476oMEAIQDw</string>
+    <string name="leaderboard_paris_10k_verified">CgkIu8v476oMEAIQEQ</string>
 </resources>
