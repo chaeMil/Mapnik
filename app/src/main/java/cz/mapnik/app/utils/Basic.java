@@ -1,6 +1,8 @@
 package cz.mapnik.app.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 
 import java.math.BigDecimal;
@@ -32,6 +34,13 @@ public class Basic {
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static boolean isOnline(Context c) {
+        ConnectivityManager cm =
+                (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public static int dpToPx(Context c, int dp) {

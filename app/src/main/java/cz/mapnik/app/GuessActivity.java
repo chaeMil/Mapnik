@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -65,7 +64,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
     private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 10;
+    private static final int GAME_MAX_ROUNDS = 3;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;

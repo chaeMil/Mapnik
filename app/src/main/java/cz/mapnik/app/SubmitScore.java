@@ -3,6 +3,8 @@ package cz.mapnik.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -75,6 +77,38 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         TextView scoreText = (TextView) findViewById(R.id.scoreText);
         scoreText.setText(String.valueOf(score));
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_submit_score, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Bundle extras = getIntent().getExtras();
+        int score = extras.getInt("score");
+
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch(id) {
+            case R.id.share_score:
+                Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_score)
+                            + ": " + score);
+                    sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

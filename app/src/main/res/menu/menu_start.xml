@@ -5,7 +5,7 @@
     <item android:id="@+id/action_achievements" android:title="@string/action_achievements"
         android:orderInCategory="100" app:showAsAction="always" />
 
-    <item android:id="@+id/action_leaderboard" android:title="@string/action_leaderboard"
+    <item android:id="@+id/action_leaderboard" android:title="@string/action_leaderboards"
         android:orderInCategory="100" app:showAsAction="always" />
 
 </menu>

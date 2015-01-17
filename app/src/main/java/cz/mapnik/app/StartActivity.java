@@ -29,6 +29,8 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
 
+import static cz.mapnik.app.utils.Basic.isOnline;
+
 public class StartActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
@@ -57,6 +59,11 @@ public class StartActivity extends ActionBarActivity implements
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+    }
+
+    public void connectionProblemToast() {
+        Toast.makeText(getApplicationContext(), getString(R.string.connection_problem),
+                Toast.LENGTH_LONG).show();
     }
 
 
@@ -95,7 +102,12 @@ public class StartActivity extends ActionBarActivity implements
                         // add other APIs and scopes here as needed
                 .build();
 
-        mGoogleApiClient.connect();
+        if (isOnline(getApplicationContext())) {
+            mGoogleApiClient.connect();
+        } else {
+            connectionProblemToast();
+            finish();
+        }
 
         App.resetCurrentGameOptions();
 
@@ -201,12 +213,15 @@ public class StartActivity extends ActionBarActivity implements
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),
                             REQUEST_ACHIEVEMENTS);
+                } else {
+                    connectionProblemToast();
                 }
             break;
             case R.id.action_leaderboard:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                    startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                            "CgkIu8v476oMEAIQBg"), REQUEST_LEADERBOARD);
+
+                } else {
+                    connectionProblemToast();
                 }
         }
 

@@ -47,10 +47,13 @@
     <string name="action_leaderboard">Leaderboard</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="verified_location">Verified courses!</string>
-    <string name="unable_to_download_answers" translatable="false">Sorry, the game was unable to get answers</string>
+    <string name="unable_to_download_answers">Someone is blocking the connection... Trying it again</string>
     <string name="downloading_answers">Downloading answers</string>
     <string name="show_leaderboard">show leaderboard</string>
     <string name="geocoder_error">Geocoder error</string>
     <string name="geocoder_is_not_present">Geocoder is not running in your device. Try restarting your device.</string>
+    <string name="action_leaderboards">Leaderboards</string>
+    <string name="action_share_score">share score</string>
+    <string name="share_score">TODO share score:</string>
 
 </resources>

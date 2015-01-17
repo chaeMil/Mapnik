@@ -1,37 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:fbutton="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SubmitScore">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/courseText"
-        android:text="course"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/win1"
+        android:scaleType="centerCrop"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scoreText"
-        android:text="score"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-    <info.hoang8f.widget.FButton
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="0dp"
-        android:id="@+id/showLeaderboard"
-        fbutton:buttonColor="@color/bright_green"
-        fbutton:shadowColor="@color/dark_green"
-        fbutton:shadowEnabled="true"
-        fbutton:shadowHeight="3dp"
-        fbutton:cornerRadius="5dp"
-        android:textAllCaps="true"
-        android:textColor="@color/dark_green"
-        android:text="@string/show_leaderboard" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/courseText"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:text="course"
+            android:layout_marginTop="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scoreText"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            android:text="score"
+            android:layout_below="@+id/courseText"
+            android:layout_centerHorizontal="true" />
+
+        <info.hoang8f.widget.FButton
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:id="@+id/showLeaderboard"
+            fbutton:buttonColor="@color/bright_green"
+            fbutton:shadowColor="@color/dark_green"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="3dp"
+            fbutton:cornerRadius="5dp"
+            android:textAllCaps="true"
+            android:textColor="@color/dark_green"
+            android:text="@string/show_leaderboard"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
