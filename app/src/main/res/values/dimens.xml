@@ -1,4 +1,6 @@
 <resources>
     <!-- Height of the bottom navigation / system bar. -->
     <dimen name="navigation_bar_height">0dp</dimen>
+    <dimen name="game_info_padding_top">30dp</dimen>
+    <dimen name="game_course_name_padding_top">40dp</dimen>
 </resources>

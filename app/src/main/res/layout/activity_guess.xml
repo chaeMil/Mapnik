@@ -89,28 +89,12 @@
 
     <RelativeLayout
         android:layout_marginTop="25dp"
-        android:paddingTop="?attr/actionBarSize"
+        android:paddingTop="@dimen/game_info_padding_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
+        android:id="@+id/gameTopButtons"
         android:fitsSystemWindows="true">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="courseName"
-            android:id="@+id/courseName"
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/helpsWrapper"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="12dp" />
 
         <RelativeLayout
             android:visibility="gone"
@@ -254,6 +238,23 @@
             android:layout_toLeftOf="@+id/progressBar2"
             android:layout_toStartOf="@+id/progressBar2" />
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="courseName"
+        android:id="@+id/courseName"
+        android:shadowColor="#000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="@dimen/game_course_name_padding_top"
+        android:layout_alignTop="@+id/gameTopButtons"
+        android:layout_alignLeft="@id/gameTopButtons"/>
 
 
 </RelativeLayout>
