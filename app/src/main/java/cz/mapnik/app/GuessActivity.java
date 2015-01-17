@@ -374,14 +374,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         }
 
 
-
-        if (App.CurrentGame.GUESSES_IN_ROW == 3) {
-            PlayGames.unlockAchievement(mGoogleApiClient,
-                    PlayGames.ACHIEVEMENT_3_IN_ROW);
-        }
-
-        App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
-
         guessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -754,6 +746,22 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     public void onConnected(Bundle bundle) {
         Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
                 .findViewById(android.R.id.content));
+
+        //achievements
+
+        if (App.CurrentGame.GUESSES_IN_ROW == 3) {
+            PlayGames.unlockAchievement(mGoogleApiClient,
+                    getString(R.string.achievement_3_in_a_row));
+        }
+
+        if (App.CurrentGame.GUESSES_IN_ROW == 5) {
+            PlayGames.unlockAchievement(mGoogleApiClient,
+                    getString(R.string.achievement_5_in_a_row));
+        }
+
+        //achievements end
+
+        App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
     }
 
     protected void onActivityResult(int requestCode, int resultCode,

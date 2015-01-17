@@ -51,6 +51,6 @@
     <string name="downloading_answers">Downloading answers</string>
     <string name="show_leaderboard">show leaderboard</string>
     <string name="geocoder_error">Geocoder error</string>
-    <string name="geocoder_is_not_present">Geocoder is not present in your device. Try restarting it.</string>
+    <string name="geocoder_is_not_present">Geocoder is not running in your device. Try restarting your device.</string>
 
 </resources>

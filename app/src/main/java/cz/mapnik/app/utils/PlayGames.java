@@ -12,8 +12,6 @@ import cz.mapnik.app.R;
 
 public class PlayGames {
 
-    public static String ACHIEVEMENT_3_IN_ROW = "CgkIu8v476oMEAIQCA";
-
     public static void unlockAchievement(GoogleApiClient client, String achievementId) {
         if(client != null && client.isConnected()) {
             Games.Achievements.unlock(client, achievementId);
