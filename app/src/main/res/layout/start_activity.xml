@@ -48,6 +48,7 @@
             android:layout_above="@+id/startButton"
             android:shadowDy="0"
             android:shadowDx="0"
+            android:textSize="18sp"
             android:shadowColor="@android:color/black"
             android:shadowRadius="5"
             android:layout_marginBottom="8dp"
