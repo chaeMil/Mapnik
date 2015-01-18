@@ -67,7 +67,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
     private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 10;
+    private static final int GAME_MAX_ROUNDS = 3;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
@@ -669,9 +669,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             a.overridePendingTransition(R.animator.card_in, R.animator.card_out);
         }
         else {
-            Toast.makeText(a.getApplicationContext(),
-                    "your score: " + App.CurrentGame.CURRENT_SCORE,
-                    Toast.LENGTH_LONG).show();
             App.log("finished game with score:", String.valueOf(App.CurrentGame.CURRENT_SCORE));
 
             Intent submitScore = new Intent(a, SubmitScore.class);

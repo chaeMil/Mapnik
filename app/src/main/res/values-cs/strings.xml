@@ -44,5 +44,8 @@
     <string name="unable_to_download_answers">Někdo nám stojí na vedení... Zkoušíme to znovu</string>
     <string name="action_share_score">sdílet skóre</string>
     <string name="share_score">TODO share score:</string>
+    <string name="leaderboard_3k_player_location_name">Moje lokace [3km]</string>
+    <string name="leaderboard_5k_player_location_name">Moje lokace [5km]</string>
+    <string name="leaderboard_10k_player_location_name">Moje lokace [10km]</string>
 
 </resources>

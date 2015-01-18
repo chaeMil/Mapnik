@@ -2,6 +2,7 @@ package cz.mapnik.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -22,6 +23,8 @@ import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static cz.mapnik.app.utils.Basic.connectionProblemToast;
 
 /**
  * Created by chaemil on 16.1.15.
@@ -61,6 +64,10 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.submit_score);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        getSupportActionBar().setTitle("");
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(getString(R.string.custom_font_regular))
                 .setFontAttrId(R.attr.fontPath)
@@ -82,10 +89,13 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         int diameter = extras.getInt("diameter");
         int score = extras.getInt("score");
 
-        App.log("course",course);
-
         TextView courseText = (TextView) findViewById(R.id.courseText);
-        courseText.setText(courseName);
+        if(!course.equals("customLocation")) {
+            courseText.setText(courseName);
+        } else {
+            courseText.setVisibility(View.GONE);
+
+        }
 
         TextView scoreText = (TextView) findViewById(R.id.scoreText);
         scoreText.setText(String.valueOf(score));
@@ -119,6 +129,21 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
                     sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             break;
+            case R.id.action_achievements:
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 1);
+                } else {
+                    connectionProblemToast(getApplicationContext());
+                }
+                break;
+            case R.id.action_leaderboard:
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    startActivityForResult(Games.Leaderboards
+                            .getAllLeaderboardsIntent(mGoogleApiClient), 1);
+                } else {
+                    connectionProblemToast(getApplicationContext());
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -130,10 +155,14 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         Bundle extras = getIntent().getExtras();
         final String course =  extras.getString("course");
         int score = extras.getInt("score");
+        int diameter = extras.getInt("diameter");
 
         Button showLeaderboard = (Button) findViewById(R.id.showLeaderboard);
 
-        if(!course.equals("playerLocation") || !course.equals("custom")) {
+        PlayGames.submitHighScore(mGoogleApiClient,
+                getString(R.string.leaderboard_global_high_score), score);
+
+        if(!course.equals("customLocation")) {
 
             PlayGames.submitHighScore(mGoogleApiClient, course, score);
 
@@ -144,6 +173,8 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
                             course), 1);
                 }
             });
+        } else {
+            showLeaderboard.setVisibility(View.GONE);
         }
     }
 

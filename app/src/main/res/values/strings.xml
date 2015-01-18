@@ -55,5 +55,8 @@
     <string name="action_leaderboards">Leaderboards</string>
     <string name="action_share_score">share score</string>
     <string name="share_score">TODO share score:</string>
+    <string name="leaderboard_3k_player_location_name">My location [3km]</string>
+    <string name="leaderboard_5k_player_location_name">My location [10km]</string>
+    <string name="leaderboard_10k_player_location_name">My location [10km]</string>
 
 </resources>

@@ -33,14 +33,13 @@ import cz.mapnik.app.utils.PlayGames;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static cz.mapnik.app.utils.Basic.connectionProblemToast;
 import static cz.mapnik.app.utils.Basic.isOnline;
 
 public class StartActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    private static final int REQUEST_ACHIEVEMENTS = 1;
-    private static final int REQUEST_LEADERBOARD = 1;
     private Button startButton;
     private Location location;
     private GoogleApiClient mGoogleApiClient;
@@ -63,11 +62,6 @@ public class StartActivity extends ActionBarActivity implements
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
-    }
-
-    public void connectionProblemToast() {
-        Toast.makeText(getApplicationContext(), getString(R.string.connection_problem),
-                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -118,7 +112,7 @@ public class StartActivity extends ActionBarActivity implements
         if (isOnline(getApplicationContext())) {
             mGoogleApiClient.connect();
         } else {
-            connectionProblemToast();
+            connectionProblemToast(getApplicationContext());
             finish();
         }
 
@@ -172,9 +166,10 @@ public class StartActivity extends ActionBarActivity implements
                                 .get(0)
                                 .getAddressLine(0);
                     }
-                    App.CurrentGame.COURSE = "userLocation";
+                    App.CurrentGame.COURSE = "playerLocation";
                     Intent i = new Intent(StartActivity.this, ChooseDiameter.class);
                     startActivity(i);
+                    dialog.hide();
                 }
             }
         });
@@ -184,6 +179,7 @@ public class StartActivity extends ActionBarActivity implements
             public void onClick(View view) {
                 Intent i = new Intent(StartActivity.this, SelectCity.class);
                 startActivity(i);
+                dialog.hide();
             }
         });
 
@@ -192,6 +188,7 @@ public class StartActivity extends ActionBarActivity implements
             public void onClick(View view) {
                 Intent i = new Intent(StartActivity.this, ChooseCustomLocation.class);
                 startActivity(i);
+                dialog.hide();
             }
         });
 
@@ -200,6 +197,7 @@ public class StartActivity extends ActionBarActivity implements
             public void onClick(View view) {
                 Intent i = new Intent(StartActivity.this, ChooseVerifiedLocation.class);
                 startActivity(i);
+                dialog.hide();
             }
         });
 
@@ -224,19 +222,19 @@ public class StartActivity extends ActionBarActivity implements
         switch(id) {
             case R.id.action_achievements:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),
-                            REQUEST_ACHIEVEMENTS);
+                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 1);
                 } else {
-                    connectionProblemToast();
+                    connectionProblemToast(getApplicationContext());
                 }
             break;
             case R.id.action_leaderboard:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     startActivityForResult(Games.Leaderboards
-                            .getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+                            .getAllLeaderboardsIntent(mGoogleApiClient), 1);
                 } else {
-                    connectionProblemToast();
+                    connectionProblemToast(getApplicationContext());
                 }
+            break;
         }
 
         return super.onOptionsItemSelected(item);

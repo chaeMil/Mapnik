@@ -4,10 +4,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
+
+import cz.mapnik.app.R;
 
 /**
  * Created by chaemil on 3.1.15.
@@ -35,6 +38,11 @@ public class Basic {
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static void connectionProblemToast(Context c) {
+        Toast.makeText(c, c.getString(R.string.connection_problem),
+                Toast.LENGTH_LONG).show();
     }
 
     public static boolean isOnline(Context c) {

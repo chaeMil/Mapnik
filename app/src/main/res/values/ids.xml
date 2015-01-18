@@ -15,7 +15,7 @@
     <string name="leaderboard_10k_player_location" translatable="false">CgkIu8v476oMEAIQDA</string>
     <string name="leaderboard_prague_10k_verified" translatable="false">CgkIu8v476oMEAIQDQ</string>
     <string name="leaderboard_london_10k_verified" translatable="false">CgkIu8v476oMEAIQDg</string>
-    <string name="leaderboard_player_location_high_score" translatable="false">CgkIu8v476oMEAIQBg</string>
     <string name="leaderboard_berlin_10k_verified" translatable="false">CgkIu8v476oMEAIQDw</string>
     <string name="leaderboard_paris_10k_verified" translatable="false">CgkIu8v476oMEAIQEQ</string>
+    <string name="leaderboard_global_high_score" translatable="false">CgkIu8v476oMEAIQEg</string>
 </resources>
