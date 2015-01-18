@@ -1,11 +1,15 @@
 package cz.mapnik.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ChooseVerifiedLocation extends Activity {
 
@@ -15,9 +19,19 @@ public class ChooseVerifiedLocation extends Activity {
     public static final String BERLIN_10K_NAME = "Berlin [10K] Verified!";
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+    
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.verified_locations);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         ImageView prague = (ImageView) findViewById(R.id.prague);
             prague.setOnClickListener(onClickListener);

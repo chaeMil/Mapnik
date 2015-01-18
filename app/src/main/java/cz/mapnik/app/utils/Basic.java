@@ -13,6 +13,7 @@ import java.util.Random;
  * Created by chaemil on 3.1.15.
  */
 public class Basic {
+
     public static int randInt(int min, int max) {
         Random rand = new Random();
         return rand.nextInt((max - min) + 1) + min;

@@ -1,6 +1,7 @@
 package cz.mapnik.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,8 @@ import android.widget.ListView;
 
 import cz.mapnik.app.utils.Cities;
 import cz.mapnik.app.utils.Map;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by chaemil on 3.1.15.
@@ -24,9 +27,19 @@ public class SelectCity extends Activity {
     EditText inputSearch;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_city);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         lv = (ListView) findViewById(R.id.city_list);
         inputSearch = (EditText) findViewById(R.id.inputSearch);

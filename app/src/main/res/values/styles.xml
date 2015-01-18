@@ -41,4 +41,7 @@
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textColor">#808080</item>
     </style>
+
+    <string name="custom_font_regular">fonts/RobotoSlab-Regular.ttf</string>
+    <string name="custom_font_bold">fonts/RobotoSlab-Bold.ttf</string>
 </resources>

@@ -1,5 +1,6 @@
 package cz.mapnik.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +20,8 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 
 import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by chaemil on 16.1.15.
@@ -49,9 +52,19 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.submit_score);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)

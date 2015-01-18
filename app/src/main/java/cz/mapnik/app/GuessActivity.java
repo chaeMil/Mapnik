@@ -3,6 +3,7 @@ package cz.mapnik.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -49,6 +50,8 @@ import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
 import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static cz.mapnik.app.utils.Map.getRandomNearbyLocation;
 
@@ -64,7 +67,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
     private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 3;
+    private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
@@ -307,9 +310,19 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 

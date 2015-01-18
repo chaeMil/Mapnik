@@ -3,6 +3,7 @@ package cz.mapnik.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,8 +27,11 @@ import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import cz.mapnik.app.utils.Basic;
 import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static cz.mapnik.app.utils.Basic.isOnline;
 
@@ -66,6 +70,10 @@ public class StartActivity extends ActionBarActivity implements
                 Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,11 @@ public class StartActivity extends ActionBarActivity implements
         setContentView(R.layout.start_activity);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < 21) {
             Window w = getWindow();
