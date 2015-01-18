@@ -232,7 +232,8 @@ public class StartActivity extends ActionBarActivity implements
             break;
             case R.id.action_leaderboard:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
+                    startActivityForResult(Games.Leaderboards
+                            .getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
                 } else {
                     connectionProblemToast();
                 }
