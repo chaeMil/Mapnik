@@ -114,6 +114,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private List<Address> panAddress;
     private RelativeLayout downloadingAnswersWrapper;
     private TextView courseName;
+    private int currentGuessRadius;
 
     public static interface Callback {
         public void onComplete(String[] answers);
@@ -191,8 +192,18 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     @Override
     public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
         if(hasUserLocation) {
-            panorama.setPosition(getRandomNearbyLocation(lat, lng, GUESS_RADIUS), GUESS_SNAP_RADIUS);
-            App.log("guessRadius", String.valueOf(GUESS_RADIUS)+"m");
+
+            if (App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_3k_player_location))
+                || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_5k_player_location))
+                || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_10k_player_location))) {
+                currentGuessRadius = GUESS_RADIUS / 10 * App.CurrentGame.CURRENT_ROUND;
+            }
+            else {
+                currentGuessRadius = GUESS_RADIUS;
+            }
+
+            panorama.setPosition(getRandomNearbyLocation(lat, lng, currentGuessRadius), GUESS_SNAP_RADIUS);
+            App.log("guessRadius", String.valueOf(currentGuessRadius)+"m");
             panorama.setStreetNamesEnabled(false);
             panorama.setUserNavigationEnabled(false);
             panorama.setPanningGesturesEnabled(false); //before panorama is ready
