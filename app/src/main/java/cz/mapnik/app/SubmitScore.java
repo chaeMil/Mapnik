@@ -67,6 +67,7 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(getString(R.string.custom_font_regular))
@@ -121,6 +122,9 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         int id = item.getItemId();
 
         switch(id) {
+            case android.R.id.home:
+                finish();
+            break;
             case R.id.share_score:
                 Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);

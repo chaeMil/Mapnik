@@ -47,7 +47,7 @@
     <string name="action_leaderboard">Leaderboard</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="verified_location">Verified courses!</string>
-    <string name="unable_to_download_answers">Someone is blocking the connection... Trying it again</string>
+    <string name="unable_to_download_answers">Someone is blocking the connection...</string>
     <string name="downloading_answers">Downloading answers</string>
     <string name="show_leaderboard">show leaderboard</string>
     <string name="geocoder_error">Geocoder error</string>
@@ -58,5 +58,6 @@
     <string name="leaderboard_3k_player_location_name">My location [3km]</string>
     <string name="leaderboard_5k_player_location_name">My location [10km]</string>
     <string name="leaderboard_10k_player_location_name">My location [10km]</string>
+    <string name="unnamed_rd">Unnamed Road</string>
 
 </resources>

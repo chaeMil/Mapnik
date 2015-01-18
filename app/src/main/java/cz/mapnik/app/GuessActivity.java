@@ -66,12 +66,14 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private static final int GUESS_RADIUS = App.CurrentGame.CURRENT_DIAMETER;
     //private static final int GUESS_SNAP_RADIUS = GUESS_RADIUS / 10;
     private static final int GUESS_SNAP_RADIUS = 500;
-    private static final int MAX_RETRY_VALUE = 3;
-    private static final int GAME_MAX_ROUNDS = 3;
+    private static final int MAX_RETRY_VALUE = 5;
+    private static final int GAME_MAX_ROUNDS = 10;
     private static final int TIME_BONUS_COUNTDOWN_SECONDS = 30;
     private static final double TIME_BONUS_MAX = 4.0;
     private static final double TIME_BONUS_VALUE = 500;
     private static int COUNTDOWN_TIME;
+
+    private static final String UNNAMED_RD = "Unnamed Rd";
 
     private static GoogleApiClient mGoogleApiClient;
     private static int RC_SIGN_IN = 9001;
@@ -164,6 +166,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 wrongAnswer2 = mGeocoder.getFromLocation(wrongAnswer2Location.latitude,
                         wrongAnswer2Location.longitude, 1).get(0).getAddressLine(0);
 
+                if (wrongAnswer1.equals(UNNAMED_RD)) {
+                    wrongAnswer1 = getString(R.string.unnamed_rd);
+                }
+                if (wrongAnswer2.equals(UNNAMED_RD)) {
+                    wrongAnswer2 = getString(R.string.unnamed_rd);
+                }
+
                 return new String[]{wrongAnswer1, wrongAnswer2, rightAnswer};
 
             }catch(IOException | RuntimeException ex){
@@ -221,9 +230,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
                             panLatitude = panorama.getLocation().position.latitude;
                             panLongitude = panorama.getLocation().position.longitude;
-
-                            /*final List<Address> panAddress = Map.getAddressFromLatLng(GuessActivity.this,
-                                    panLatitude, panLongitude, 1);*/
 
                             ReverseGeocoderTask getPanAddressAndCreateAnswers = new ReverseGeocoderTask(
                                     geocoder, panLatitude, panLongitude, new Callback() {

@@ -41,11 +41,12 @@
     <string name="geocoder_error">Geocoder chyba</string>
     <string name="geocoder_is_not_present">Geocoder není spuštěn ve vašem zařízení. Zkuste zařízení restartovat.</string>
     <string name="action_leaderboards">Žebříčky</string>
-    <string name="unable_to_download_answers">Někdo nám stojí na vedení... Zkoušíme to znovu</string>
+    <string name="unable_to_download_answers">Někdo nám stojí na vedení...</string>
     <string name="action_share_score">sdílet skóre</string>
     <string name="share_score">TODO share score:</string>
     <string name="leaderboard_3k_player_location_name">Moje lokace [3km]</string>
     <string name="leaderboard_5k_player_location_name">Moje lokace [5km]</string>
     <string name="leaderboard_10k_player_location_name">Moje lokace [10km]</string>
+    <string name="unnamed_rd">Ulice bez názvu</string>
 
 </resources>
