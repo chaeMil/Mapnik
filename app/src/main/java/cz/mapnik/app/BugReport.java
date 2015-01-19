@@ -66,7 +66,7 @@ public class BugReport extends Activity {
             log=new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line);
+                log.append(line+"\n\n");
             }
 
             logcat.setText(log);

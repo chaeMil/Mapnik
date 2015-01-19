@@ -42,13 +42,13 @@ ADDED from AndroidManifest.xml:11:5
 	android:name
 		ADDED from AndroidManifest.xml:11:22
 uses-feature#0x00020000
-ADDED from AndroidManifest.xml:14:5
+ADDED from AndroidManifest.xml:13:5
 	android:required
-		ADDED from AndroidManifest.xml:16:9
-	android:glEsVersion
 		ADDED from AndroidManifest.xml:15:9
+	android:glEsVersion
+		ADDED from AndroidManifest.xml:14:9
 application
-ADDED from AndroidManifest.xml:18:5
+ADDED from AndroidManifest.xml:17:5
 MERGED from com.android.support:appcompat-v7:21.0.2:16:5
 MERGED from com.android.support:support-v4:21.0.2:16:5
 MERGED from com.google.android.gms:play-services:6.5.87:20:5
@@ -67,111 +67,119 @@ MERGED from com.android.support:support-v4:21.0.2:16:5
 MERGED from com.google.android.gms:play-services:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.2:16:5
 	android:label
-		ADDED from AndroidManifest.xml:21:9
-	android:allowBackup
-		ADDED from AndroidManifest.xml:19:9
-	android:icon
 		ADDED from AndroidManifest.xml:20:9
+	android:allowBackup
+		ADDED from AndroidManifest.xml:18:9
+	android:icon
+		ADDED from AndroidManifest.xml:19:9
 	android:theme
-		ADDED from AndroidManifest.xml:22:9
+		ADDED from AndroidManifest.xml:21:9
 activity#cz.mapnik.app.StartActivity
-ADDED from AndroidManifest.xml:23:9
+ADDED from AndroidManifest.xml:22:9
 	android:label
-		ADDED from AndroidManifest.xml:24:13
+		ADDED from AndroidManifest.xml:23:13
 	android:name
-		ADDED from AndroidManifest.xml:23:19
+		ADDED from AndroidManifest.xml:22:19
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:25:13
+ADDED from AndroidManifest.xml:24:13
 action#android.intent.action.MAIN
+ADDED from AndroidManifest.xml:25:17
+	android:name
+		ADDED from AndroidManifest.xml:25:25
+category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:26:17
 	android:name
-		ADDED from AndroidManifest.xml:26:25
-category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:27:17
-	android:name
-		ADDED from AndroidManifest.xml:27:27
+		ADDED from AndroidManifest.xml:26:27
 activity#cz.mapnik.app.SelectCity
-ADDED from AndroidManifest.xml:31:9
+ADDED from AndroidManifest.xml:30:9
 	android:label
+		ADDED from AndroidManifest.xml:31:13
+	android:theme
 		ADDED from AndroidManifest.xml:32:13
-	android:theme
-		ADDED from AndroidManifest.xml:33:13
 	android:name
-		ADDED from AndroidManifest.xml:31:19
+		ADDED from AndroidManifest.xml:30:19
 activity#cz.mapnik.app.GuessActivity
-ADDED from AndroidManifest.xml:36:9
+ADDED from AndroidManifest.xml:35:9
 	android:label
-		ADDED from AndroidManifest.xml:38:13
-	android:name
 		ADDED from AndroidManifest.xml:37:13
+	android:name
+		ADDED from AndroidManifest.xml:36:13
 activity#cz.mapnik.app.ShowOnMap
-ADDED from AndroidManifest.xml:41:9
+ADDED from AndroidManifest.xml:40:9
 	android:label
+		ADDED from AndroidManifest.xml:41:13
+	android:theme
 		ADDED from AndroidManifest.xml:42:13
-	android:theme
-		ADDED from AndroidManifest.xml:43:13
 	android:name
-		ADDED from AndroidManifest.xml:41:19
+		ADDED from AndroidManifest.xml:40:19
 activity#cz.mapnik.app.ChooseDiameter
-ADDED from AndroidManifest.xml:46:9
+ADDED from AndroidManifest.xml:45:9
 	android:label
+		ADDED from AndroidManifest.xml:46:13
+	android:theme
 		ADDED from AndroidManifest.xml:47:13
-	android:theme
-		ADDED from AndroidManifest.xml:48:13
 	android:name
-		ADDED from AndroidManifest.xml:46:19
+		ADDED from AndroidManifest.xml:45:19
 activity#cz.mapnik.app.MapHelpActivity
-ADDED from AndroidManifest.xml:51:9
+ADDED from AndroidManifest.xml:50:9
 	android:label
+		ADDED from AndroidManifest.xml:51:13
+	android:theme
 		ADDED from AndroidManifest.xml:52:13
-	android:theme
-		ADDED from AndroidManifest.xml:53:13
 	android:name
-		ADDED from AndroidManifest.xml:51:19
+		ADDED from AndroidManifest.xml:50:19
 activity#cz.mapnik.app.ChooseCustomLocation
-ADDED from AndroidManifest.xml:56:9
+ADDED from AndroidManifest.xml:55:9
 	android:label
+		ADDED from AndroidManifest.xml:56:13
+	android:theme
 		ADDED from AndroidManifest.xml:57:13
-	android:theme
-		ADDED from AndroidManifest.xml:58:13
 	android:name
-		ADDED from AndroidManifest.xml:56:19
+		ADDED from AndroidManifest.xml:55:19
 activity#cz.mapnik.app.ChooseVerifiedLocation
-ADDED from AndroidManifest.xml:61:9
+ADDED from AndroidManifest.xml:60:9
 	android:label
+		ADDED from AndroidManifest.xml:61:13
+	android:theme
 		ADDED from AndroidManifest.xml:62:13
-	android:theme
-		ADDED from AndroidManifest.xml:63:13
 	android:name
-		ADDED from AndroidManifest.xml:61:19
+		ADDED from AndroidManifest.xml:60:19
 activity#cz.mapnik.app.SubmitScore
-ADDED from AndroidManifest.xml:66:9
+ADDED from AndroidManifest.xml:65:9
 	android:label
-		ADDED from AndroidManifest.xml:67:13
+		ADDED from AndroidManifest.xml:66:13
 	android:theme
-		ADDED from AndroidManifest.xml:68:13
+		ADDED from AndroidManifest.xml:67:13
 	android:name
-		ADDED from AndroidManifest.xml:66:19
-meta-data#com.google.android.maps.v2.API_KEY
-ADDED from AndroidManifest.xml:71:9
-	android:name
-		ADDED from AndroidManifest.xml:71:20
-	android:value
+		ADDED from AndroidManifest.xml:65:19
+activity#cz.mapnik.app.BugReport
+ADDED from AndroidManifest.xml:70:9
+	android:label
+		ADDED from AndroidManifest.xml:71:13
+	android:theme
 		ADDED from AndroidManifest.xml:72:13
-meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:74:9
-MERGED from com.google.android.gms:play-services:6.5.87:21:9
-MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:name
-		ADDED from AndroidManifest.xml:75:13
+		ADDED from AndroidManifest.xml:70:19
+meta-data#com.google.android.maps.v2.API_KEY
+ADDED from AndroidManifest.xml:75:9
+	android:name
+		ADDED from AndroidManifest.xml:75:20
 	android:value
 		ADDED from AndroidManifest.xml:76:13
-meta-data#com.google.android.gms.games.APP_ID
+meta-data#com.google.android.gms.version
 ADDED from AndroidManifest.xml:78:9
+MERGED from com.google.android.gms:play-services:6.5.87:21:9
+MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:name
-		ADDED from AndroidManifest.xml:78:20
-	android:value
 		ADDED from AndroidManifest.xml:79:13
+	android:value
+		ADDED from AndroidManifest.xml:80:13
+meta-data#com.google.android.gms.games.APP_ID
+ADDED from AndroidManifest.xml:82:9
+	android:name
+		ADDED from AndroidManifest.xml:82:20
+	android:value
+		ADDED from AndroidManifest.xml:83:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.2:15:5
