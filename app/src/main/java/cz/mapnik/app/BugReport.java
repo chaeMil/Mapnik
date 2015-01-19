@@ -27,7 +27,6 @@ public class BugReport extends Activity {
 
     private StringBuilder log;
     private TextView logcat;
-    private EditText email;
     private EditText bugSpecification;
     private int reportValidity = 0;
     private Button submitButton;
@@ -44,7 +43,6 @@ public class BugReport extends Activity {
         setContentView(R.layout.bug_report);
 
         bugSpecification = (EditText) findViewById(R.id.bugSpecification);
-        email = (EditText) findViewById(R.id.email);
         logcat = (TextView) findViewById(R.id.logcat);
         submitButton = (Button) findViewById(R.id.submitButton);
 
@@ -80,13 +78,6 @@ public class BugReport extends Activity {
     public void sendReport() {
         reportValidity = 0;
 
-        if (!email.getText().toString().equals("")) {
-            reportValidity += 1;
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.put_email),
-                    Toast.LENGTH_LONG).show();
-        }
-
         if (!bugSpecification.getText().toString().equals("")) {
             reportValidity += 1;
         } else {
@@ -101,7 +92,7 @@ public class BugReport extends Activity {
                     Toast.LENGTH_LONG).show();
         }
 
-        if (reportValidity == 3) {
+        if (reportValidity == 2) {
 
             String emailBody = bugSpecification.getText() + "\n\n\n" + logcat.getText();
 
