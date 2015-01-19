@@ -45,6 +45,7 @@
             android:layout_alignParentTop="true"/>
 
         <at.markushi.ui.CircleButton
+            android:visibility="invisible"
             android:id="@+id/threeKButton"
             android:layout_width="72dp"
             android:layout_height="72dp"
@@ -56,6 +57,7 @@
             android:layout_toStartOf="@+id/fiveKButton" />
 
         <at.markushi.ui.CircleButton
+            android:visibility="invisible"
             android:id="@+id/fiveKButton"
             android:layout_width="84dp"
             android:layout_height="84dp"
@@ -67,6 +69,7 @@
             android:layout_toStartOf="@+id/tenKButton" />
 
         <at.markushi.ui.CircleButton
+            android:visibility="invisible"
             android:id="@+id/tenKButton"
             android:layout_width="96dp"
             android:layout_height="96dp"

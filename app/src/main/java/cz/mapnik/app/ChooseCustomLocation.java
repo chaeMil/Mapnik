@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -82,6 +84,9 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
                         .position(latLng));
 
                 doneButton.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.SlideInUp)
+                        .duration(400)
+                        .playOn(doneButton);
             }
         });
     }

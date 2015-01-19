@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -24,10 +26,81 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
     private LatLng start;
     private int diameter = 0;
     private CircleButton confirmButton;
+    private CircleButton tenKDiameterButton;
+    private CircleButton fiveKDiameterButton;
+    private CircleButton threeKDiameterButton;
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public void prepareUi() {
+
+
+        Thread show10KDiameter = new Thread(){
+            public void run(){
+                try{
+                    sleep(800);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            YoYo.with(Techniques.BounceInUp)
+                                    .duration(500)
+                                    .playOn(tenKDiameterButton);
+                            tenKDiameterButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+                catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread show5KDiameter = new Thread(){
+            public void run(){
+                try{
+                    sleep(1200);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            YoYo.with(Techniques.BounceInUp)
+                                    .duration(500)
+                                    .playOn(fiveKDiameterButton);
+                            fiveKDiameterButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+                catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread show3KDiameter = new Thread(){
+            public void run(){
+                try{
+                    sleep(1600);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            YoYo.with(Techniques.BounceInUp)
+                                    .duration(500)
+                                    .playOn(threeKDiameterButton);
+                            threeKDiameterButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+                catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        show3KDiameter.start();
+        show5KDiameter.start();
+        show10KDiameter.start();
     }
 
     @Override
@@ -44,10 +117,12 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        CircleButton threeKDiameterButton = (CircleButton) findViewById(R.id.threeKButton);
-        CircleButton fiveKDiameterButton = (CircleButton) findViewById(R.id.fiveKButton);
-        CircleButton tenKDiameterButton = (CircleButton) findViewById(R.id.tenKButton);
+        threeKDiameterButton = (CircleButton) findViewById(R.id.threeKButton);
+        fiveKDiameterButton = (CircleButton) findViewById(R.id.fiveKButton);
+        tenKDiameterButton = (CircleButton) findViewById(R.id.tenKButton);
         confirmButton = (CircleButton) findViewById(R.id.confirmButton);
+
+        prepareUi();
 
         threeKDiameterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +190,19 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
     public void setDiameter(MapFragment mapFragment, double radius) {
         GoogleMap map = mapFragment.getMap();
 
+        if(diameter == 0) {
+            confirmButton.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.SlideInRight)
+                    .duration(400)
+                    .playOn(confirmButton);
+        } else {
+            YoYo.with(Techniques.Tada)
+                    .duration(400)
+                    .playOn(confirmButton);
+        }
+
         diameter = (int) radius;
-        confirmButton.setVisibility(View.VISIBLE);
+
 
         CircleOptions circleOptions = new CircleOptions()
                 .strokeColor(getResources().getColor(R.color.bright_green))
@@ -142,6 +228,7 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
         map.getUiSettings().setMapToolbarEnabled(false);
         map.setMyLocationEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
+        map.setOnMapClickListener(null);
 
         setStartingPoint(map);
 

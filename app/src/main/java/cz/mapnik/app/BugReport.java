@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -82,6 +85,9 @@ public class BugReport extends Activity {
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.put_bug_specification),
                     Toast.LENGTH_LONG).show();
+            YoYo.with(Techniques.Tada)
+                    .duration(500)
+                    .playOn(bugSpecification);
         }
 
         if (logcat.getText() != null) {

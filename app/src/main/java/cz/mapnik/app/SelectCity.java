@@ -52,6 +52,7 @@ public class SelectCity extends Activity {
                 App.setStartingPoint(Map.getLocationFromAddress(SelectCity.this,
                         String.valueOf(parent.getItemAtPosition(position))));
                 App.CurrentGame.COURSE = "customLocation";
+                App.CurrentGame.COURSE_NAME = String.valueOf(parent.getItemAtPosition(position));
                 Intent i = new Intent(SelectCity.this, ChooseDiameter.class);
                 startActivity(i);
                 finish();
