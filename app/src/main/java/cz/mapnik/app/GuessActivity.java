@@ -28,6 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.filippudak.ProgressPieView.ProgressPieView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,6 +47,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Handler;
 
 import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;
@@ -272,12 +275,29 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     }
 
     public void prepareUI(StreetViewPanorama panorama) {
+
+        int animDuration = 800;
+
         guessButton.setVisibility(View.VISIBLE);
+
+        YoYo.with(Techniques.SlideInUp)
+                .duration(animDuration)
+                .playOn(guessButton);
+
         if(App.CurrentGame.CURRENT_GAME_HELPS > 0) {
             helpsWrapper.setVisibility(View.VISIBLE);
             helpsText.setText(String.valueOf(App.CurrentGame.CURRENT_GAME_HELPS));
+
+            YoYo.with(Techniques.FadeIn)
+                    .duration(animDuration)
+                    .playOn(helpsWrapper);
         }
+
         timeBonusWrapper.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeIn)
+                .duration(animDuration)
+                .playOn(timeBonusWrapper);
+
         progressBar.setVisibility(View.GONE);
 
         panorama.setPanningGesturesEnabled(true);
@@ -285,6 +305,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
         courseName.setText(App.CurrentGame.COURSE_NAME);
         courseName.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInLeft)
+                .duration(animDuration)
+                .playOn(courseName);
 
         COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
 
@@ -850,7 +873,29 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         public void onFinish() {
             Toast.makeText(getApplicationContext(), getString(R.string.time_bonus_is_out),
                     Toast.LENGTH_LONG).show();
-            timeBonusWrapper.setVisibility(View.GONE);
+
+            YoYo.with(Techniques.Hinge)
+                    .duration(700)
+                    .playOn(timeBonusWrapper);
+
+            Thread hideCountThread = new Thread(){
+                public void run(){
+                    try{
+                        sleep(1400);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                timeBonusWrapper.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                    catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            hideCountThread.start();
         }
 
         @Override
@@ -859,6 +904,18 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             double progress = (100.0 / (double) TIME_BONUS_COUNTDOWN_SECONDS) * (double) COUNTDOWN_TIME;
             countdown.setProgress((int) progress);
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
+
+            if (COUNTDOWN_TIME <= 16) {
+                if (COUNTDOWN_TIME > 6 && COUNTDOWN_TIME % 2 == 0) {
+                    YoYo.with(Techniques.Pulse)
+                            .duration(2000)
+                            .playOn(countdown);
+                } else if (COUNTDOWN_TIME < 6) {
+                    YoYo.with(Techniques.Tada)
+                            .duration(600)
+                            .playOn(countdown);
+                }
+            }
         }
     }
 }
