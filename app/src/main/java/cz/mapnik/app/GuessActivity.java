@@ -906,11 +906,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
 
             if (COUNTDOWN_TIME <= 16) {
-                if (COUNTDOWN_TIME > 6 && COUNTDOWN_TIME % 2 == 0) {
+                if (COUNTDOWN_TIME > 7 && COUNTDOWN_TIME % 2 == 0) {
                     YoYo.with(Techniques.Pulse)
                             .duration(2000)
                             .playOn(countdown);
-                } else if (COUNTDOWN_TIME < 6) {
+                } else if (COUNTDOWN_TIME < 7) {
                     YoYo.with(Techniques.Tada)
                             .duration(600)
                             .playOn(countdown);
