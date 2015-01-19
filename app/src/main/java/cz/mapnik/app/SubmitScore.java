@@ -108,6 +108,14 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Intent i = new Intent(SubmitScore.this, StartActivity.class);
+        startActivity(i);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Bundle extras = getIntent().getExtras();
@@ -121,6 +129,8 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         switch(id) {
             case android.R.id.home:
                 finish();
+                Intent i = new Intent(SubmitScore.this, StartActivity.class);
+                startActivity(i);
             break;
             case R.id.share_score:
                 Intent sendIntent = new Intent();

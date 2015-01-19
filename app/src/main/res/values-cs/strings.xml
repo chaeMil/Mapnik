@@ -47,5 +47,11 @@
     <string name="leaderboard_5k_player_location_name">Moje lokace [5km]</string>
     <string name="leaderboard_10k_player_location_name">Moje lokace [10km]</string>
     <string name="unnamed_rd">Ulice bez názvu</string>
+    <string name="bug_report">nahlásit chybu</string>
+    <string name="specify_bug">popište chybu...</string>
+    <string name="email">tvůj email</string>
+    <string name="logcat_is_empty">LogCat je prázdný</string>
+    <string name="put_bug_specification">Prosím popiš chybu</string>
+    <string name="put_email">Prosím vlož email</string>
 
 </resources>

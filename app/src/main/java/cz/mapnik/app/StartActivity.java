@@ -241,23 +241,9 @@ public class StartActivity extends ActionBarActivity implements
                 }
             break;
             case R.id.bug_report:
-                try {
-                    Process process = Runtime.getRuntime().exec("logcat -d");
-                    BufferedReader bufferedReader = new BufferedReader(
-                            new InputStreamReader(process.getInputStream()));
-
-                    StringBuilder log=new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        log.append(line);
-                    }
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, (CharSequence) log);
-                    sendIntent.setType("text/plain");
-                    startActivity(sendIntent);
-                } catch (IOException e) {
-                }
+                Intent i = new Intent(StartActivity.this, BugReport.class);
+                startActivity(i);
+            break;
         }
 
         return super.onOptionsItemSelected(item);

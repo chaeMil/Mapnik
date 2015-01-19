@@ -59,5 +59,11 @@
     <string name="leaderboard_5k_player_location_name">My location [10km]</string>
     <string name="leaderboard_10k_player_location_name">My location [10km]</string>
     <string name="unnamed_rd">Unnamed Road</string>
+    <string name="specify_bug">specify bug...</string>
+    <string name="bug_report">bug report</string>
+    <string name="email">your email</string>
+    <string name="put_email">Please insert email address</string>
+    <string name="put_bug_specification">Please specify bug</string>
+    <string name="logcat_is_empty">LogCat is empty</string>
 
 </resources>
