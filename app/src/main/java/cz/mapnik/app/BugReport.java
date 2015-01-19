@@ -79,18 +79,21 @@ public class BugReport extends Activity {
 
     public void sendReport() {
         reportValidity = 0;
-        if (email.getText() != null) {
+
+        if (!email.getText().toString().equals("")) {
             reportValidity += 1;
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.put_email),
                     Toast.LENGTH_LONG).show();
         }
-        if (bugSpecification.getText() != null) {
+
+        if (!bugSpecification.getText().toString().equals("")) {
             reportValidity += 1;
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.put_bug_specification),
                     Toast.LENGTH_LONG).show();
         }
+
         if (logcat.getText() != null) {
             reportValidity += 1;
         } else {
@@ -103,12 +106,13 @@ public class BugReport extends Activity {
             String emailBody = bugSpecification.getText() + "\n\n\n" + logcat.getText();
 
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
             emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{BUG_REPORT_EMAIL});
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, BUG_REPORT_SUBJECT);
             emailIntent.putExtra(Intent.EXTRA_TEXT   , emailBody);
 
             try {
-                startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                startActivityForResult(emailIntent, 1);
                 finish();
                 App.log("Finished sending email...", "");
             } catch (android.content.ActivityNotFoundException ex) {
