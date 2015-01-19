@@ -47,7 +47,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Handler;
 
 import at.markushi.ui.CircleButton;
 import cz.mapnik.app.utils.Basic;

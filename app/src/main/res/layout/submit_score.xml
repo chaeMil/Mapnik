@@ -18,6 +18,7 @@
         android:fitsSystemWindows="true">
 
         <TextView
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/courseText"
@@ -29,6 +30,7 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/scoreText"
@@ -39,6 +41,7 @@
             android:layout_centerHorizontal="true" />
 
         <info.hoang8f.widget.FButton
+            android:visibility="invisible"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:id="@+id/showLeaderboard"

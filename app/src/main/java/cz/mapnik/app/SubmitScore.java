@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
@@ -36,6 +38,9 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInflow = true;
     private boolean mSignInClicked = false;
+    private TextView courseText;
+    private TextView scoreText;
+    private Button showLeaderboard;
 
     @Override
     protected void onStart() {
@@ -54,6 +59,55 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public void prepareUi(final String course, final String courseName) {
+
+        Thread showCourseName = new Thread(){
+            public void run(){
+                try{
+                    sleep(300);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            YoYo.with(Techniques.DropOut)
+                                    .duration(900)
+                                    .playOn(courseText);
+                            if(!course.equals("customLocation")) {
+                                courseText.setText(courseName);
+                                courseText.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }
+                catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread showScore = new Thread(){
+            public void run(){
+                try{
+                    sleep(800);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            YoYo.with(Techniques.DropOut)
+                                    .duration(900)
+                                    .playOn(scoreText);
+                            scoreText.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+                catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        showCourseName.start();
+        showScore.start();
     }
 
     @Override
@@ -87,16 +141,12 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         int diameter = extras.getInt("diameter");
         int score = extras.getInt("score");
 
-        TextView courseText = (TextView) findViewById(R.id.courseText);
-        if(!course.equals("customLocation")) {
-            courseText.setText(courseName);
-        } else {
-            courseText.setVisibility(View.GONE);
+        courseText = (TextView) findViewById(R.id.courseText);
 
-        }
-
-        TextView scoreText = (TextView) findViewById(R.id.scoreText);
+        scoreText = (TextView) findViewById(R.id.scoreText);
         scoreText.setText(String.valueOf(score));
+
+        prepareUi(course, courseName);
 
     }
 
@@ -168,7 +218,11 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         int score = extras.getInt("score");
         int diameter = extras.getInt("diameter");
 
-        Button showLeaderboard = (Button) findViewById(R.id.showLeaderboard);
+        showLeaderboard = (Button) findViewById(R.id.showLeaderboard);
+        showLeaderboard.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInUp)
+                .duration(700)
+                .playOn(showLeaderboard);
 
         PlayGames.submitHighScore(mGoogleApiClient,
                 getString(R.string.leaderboard_global_high_score), score);
