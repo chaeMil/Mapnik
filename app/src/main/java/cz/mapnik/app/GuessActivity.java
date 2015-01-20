@@ -77,7 +77,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     private static final String UNNAMED_RD = "Unnamed Rd";
 
-
+    private static final int ANIM_DURATION = 800;
 
     private static GoogleApiClient mGoogleApiClient;
     private static int RC_SIGN_IN = 9001;
@@ -105,20 +105,21 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     private LatLng wrongAnswer2Location;
     private double panLatitude;
     private double panLongitude;
-    private CircleButton guessButton;
+    private static CircleButton guessButton;
     private RelativeLayout debugValues;
     private ProgressPieView countdown;
     private static MyCount timer;
-    private RelativeLayout timeBonusWrapper;
+    private static RelativeLayout timeBonusWrapper;
     private CircleButton helpButton;
-    private RelativeLayout helpsWrapper;
+    private static RelativeLayout helpsWrapper;
     private TextView helpsText;
     private ProgressWheel progressBar;
     private Geocoder geocoder;
     private List<Address> panAddress;
     private RelativeLayout downloadingAnswersWrapper;
-    private TextView courseName;
+    private static TextView courseName;
     private int currentGuessRadius;
+    private int COUNTDOWN_TIME_CRITICAL = 7;
 
     public static interface Callback {
         public void onComplete(String[] answers);
@@ -282,12 +283,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     public void prepareUI(StreetViewPanorama panorama) {
 
-        int animDuration = 800;
-
         guessButton.setVisibility(View.VISIBLE);
 
         YoYo.with(Techniques.SlideInUp)
-                .duration(animDuration)
+                .duration(ANIM_DURATION)
                 .playOn(guessButton);
 
         if(App.CurrentGame.CURRENT_GAME_HELPS > 0) {
@@ -295,13 +294,13 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             helpsText.setText(String.valueOf(App.CurrentGame.CURRENT_GAME_HELPS));
 
             YoYo.with(Techniques.FadeIn)
-                    .duration(animDuration)
+                    .duration(ANIM_DURATION)
                     .playOn(helpsWrapper);
         }
 
         timeBonusWrapper.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeIn)
-                .duration(animDuration)
+                .duration(ANIM_DURATION)
                 .playOn(timeBonusWrapper);
 
         progressBar.setVisibility(View.GONE);
@@ -312,7 +311,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         courseName.setText(App.CurrentGame.COURSE_NAME);
         courseName.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.SlideInLeft)
-                .duration(animDuration)
+                .duration(ANIM_DURATION)
                 .playOn(courseName);
 
         COUNTDOWN_TIME = TIME_BONUS_COUNTDOWN_SECONDS;
@@ -674,6 +673,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 App.CurrentGame.GUESSES_IN_ROW = 0;
                             } else {
                                 App.CurrentGame.GUESSES_IN_ROW += 1;
+
+                                //achievement
+                                if (COUNTDOWN_TIME <= COUNTDOWN_TIME_CRITICAL) {
+                                    PlayGames.unlockAchievement(mGoogleApiClient,
+                                            getString(R.string.achievement_tick_tock));
+                                }
                             }
 
                             double metersFromPlayerPosition = App.startingPoint
@@ -705,17 +710,41 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                         dialog.cancel();
                     }
                 });
+
         return builder.create();
     }
 
-    public static void nextGuess(Activity a) {
-        a.finish();
+    public static void nextGuess(final Activity a) {
         stopTimer();
-        Intent i = new Intent(a, GuessActivity.class);
+        final Intent i = new Intent(a, GuessActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (App.CurrentGame.CURRENT_ROUND < GAME_MAX_ROUNDS + 1) {
-            a.startActivity(i);
-            a.overridePendingTransition(R.animator.card_in, R.animator.card_out);
+            Thread t = new Thread(){
+                public void run(){
+                    try{
+                        sleep(700);
+                        a.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                a.finish();
+                                a.startActivity(i);
+                                a.overridePendingTransition(R.animator.card_in, R.animator.card_out);
+                            }
+                        });
+                    }
+                    catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            YoYo.with(Techniques.SlideOutDown).duration(ANIM_DURATION).playOn(guessButton);
+            YoYo.with(Techniques.SlideOutLeft).duration(ANIM_DURATION).playOn(courseName);
+            YoYo.with(Techniques.FadeOut).duration(ANIM_DURATION).playOn(helpsWrapper);
+            YoYo.with(Techniques.FadeOut).duration(ANIM_DURATION).playOn(timeBonusWrapper);
+
+            t.start();
+
             App.log("== endOfRound: ", String.valueOf(App.CurrentGame.CURRENT_ROUND));
         }
         else {
@@ -807,7 +836,6 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 .findViewById(android.R.id.content));
 
         //achievements
-
         if (App.CurrentGame.GUESSES_IN_ROW == 3) {
             PlayGames.unlockAchievement(mGoogleApiClient,
                     getString(R.string.achievement_3_in_a_row));
@@ -818,6 +846,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     getString(R.string.achievement_5_in_a_row));
         }
 
+        if (App.CurrentGame.GUESSES_IN_ROW == 7) {
+            PlayGames.unlockAchievement(mGoogleApiClient,
+                    getString(R.string.achievement_7_in_a_row));
+        }
         //achievements end
 
         App.log("guesses in row: ", String.valueOf(App.CurrentGame.GUESSES_IN_ROW));
@@ -916,11 +948,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             countdown.setText(String.valueOf(COUNTDOWN_TIME));
 
             if (COUNTDOWN_TIME <= 16) {
-                if (COUNTDOWN_TIME > 7 && COUNTDOWN_TIME % 2 == 0) {
+                if (COUNTDOWN_TIME > COUNTDOWN_TIME_CRITICAL && COUNTDOWN_TIME % 2 == 0) {
                     YoYo.with(Techniques.Pulse)
                             .duration(2000)
                             .playOn(countdown);
-                } else if (COUNTDOWN_TIME < 7) {
+                } else if (COUNTDOWN_TIME < COUNTDOWN_TIME_CRITICAL) {
                     YoYo.with(Techniques.Tada)
                             .duration(600)
                             .playOn(countdown);

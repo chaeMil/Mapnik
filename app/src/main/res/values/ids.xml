@@ -5,7 +5,8 @@
 
     <string name="achievement_3_in_a_row" translatable="false">CgkIu8v476oMEAIQCA</string>
     <string name="achievement_5_in_a_row" translatable="false">CgkIu8v476oMEAIQCQ</string>
-    <string name="achievement_test_achievement_1" translatable="false">CgkIu8v476oMEAIQAQ</string>
+    <string name="achievement_7_in_a_row" translatable="false">CgkIu8v476oMEAIQAQ</string>
+    <string name="achievement_tick_tock" translatable="false"> CgkIu8v476oMEAIQGw</string>
     <string name="achievement_test_achievement_2" translatable="false">CgkIu8v476oMEAIQAg</string>
     <string name="achievement_test_achievement_3" translatable="false">CgkIu8v476oMEAIQAw</string>
     <string name="achievement_test_achievement_4" translatable="false">CgkIu8v476oMEAIQBA</string>
