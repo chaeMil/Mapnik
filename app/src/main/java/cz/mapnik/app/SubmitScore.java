@@ -19,6 +19,7 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import cz.mapnik.app.utils.Map;
 import cz.mapnik.app.utils.PlayGames;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -73,7 +74,7 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
                             YoYo.with(Techniques.DropOut)
                                     .duration(900)
                                     .playOn(courseText);
-                            if(!course.equals("customLocation")) {
+                            if(!course.equals(Mapnik.CUSTOM_LOCATION)) {
                                 courseText.setText(courseName);
                                 courseText.setVisibility(View.VISIBLE);
                             }
@@ -136,10 +137,10 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         mGoogleApiClient.connect();
 
         Bundle extras = getIntent().getExtras();
-        String course =  extras.getString("course");
-        String courseName = extras.getString("courseName");
-        int diameter = extras.getInt("diameter");
-        int score = extras.getInt("score");
+        String course =  extras.getString(Mapnik.COURSE);
+        String courseName = extras.getString(Mapnik.COURSE_NAME);
+        int diameter = extras.getInt(Mapnik.DIAMETER);
+        int score = extras.getInt(Mapnik.SCORE);
 
         courseText = (TextView) findViewById(R.id.courseText);
 
@@ -169,7 +170,7 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Bundle extras = getIntent().getExtras();
-        int score = extras.getInt("score");
+        int score = extras.getInt(Mapnik.SCORE);
 
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -214,9 +215,9 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     public void onConnected(Bundle bundle) {
 
         Bundle extras = getIntent().getExtras();
-        final String course =  extras.getString("course");
-        int score = extras.getInt("score");
-        int diameter = extras.getInt("diameter");
+        final String course =  extras.getString(Mapnik.COURSE);
+        int score = extras.getInt(Mapnik.SCORE);
+        int diameter = extras.getInt(Mapnik.DIAMETER);
 
         showLeaderboard = (Button) findViewById(R.id.showLeaderboard);
         showLeaderboard.setVisibility(View.VISIBLE);
@@ -227,7 +228,7 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
         PlayGames.submitHighScore(mGoogleApiClient,
                 getString(R.string.leaderboard_global_high_score), score);
 
-        if(!course.equals("customLocation")) {
+        if(!course.equals(Mapnik.CUSTOM_LOCATION)) {
 
             PlayGames.submitHighScore(mGoogleApiClient, course, score);
 

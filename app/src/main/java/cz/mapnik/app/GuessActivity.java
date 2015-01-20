@@ -77,6 +77,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     private static final String UNNAMED_RD = "Unnamed Rd";
 
+
+
     private static GoogleApiClient mGoogleApiClient;
     private static int RC_SIGN_IN = 9001;
     private boolean mResolvingConnectionFailure = false;
@@ -197,7 +199,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
             if (App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_3k_player_location))
                 || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_5k_player_location))
-                || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_10k_player_location))) {
+                || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_10k_player_location))
+                || App.CurrentGame.COURSE.equals(Mapnik.CUSTOM_LOCATION)) {
                 currentGuessRadius = GUESS_RADIUS / 10 * App.CurrentGame.CURRENT_ROUND;
             }
             else {
@@ -465,8 +468,8 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 }
                 helpsWrapper.setVisibility(View.GONE);
                 Intent i = new Intent(GuessActivity.this, MapHelpActivity.class);
-                i.putExtra("locLatitude",panLatitude);
-                i.putExtra("locLongitude",panLongitude);
+                i.putExtra(Mapnik.LOC_LATITUDE, panLatitude);
+                i.putExtra(Mapnik.LOC_LONGITUDE, panLongitude);
                 startActivity(i);
             }
         });
@@ -566,12 +569,12 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(GuessActivity.this, ShowOnMap.class);
-                        i.putExtra("rightAnswer", rightAnswer);
-                        i.putExtra("locLatitude", panLatitude);
-                        i.putExtra("locLongitude", panLongitude);
-                        i.putExtra("guessLatitude", guessLatitude);
-                        i.putExtra("guessLongitude", guessLongitude);
-                        i.putExtra("rightLocation", rightLocation);
+                        i.putExtra(Mapnik.RIGHT_ANSWER, rightAnswer);
+                        i.putExtra(Mapnik.LOC_LATITUDE, panLatitude);
+                        i.putExtra(Mapnik.LOC_LONGITUDE, panLongitude);
+                        i.putExtra(Mapnik.GUESS_LATITUDE, guessLatitude);
+                        i.putExtra(Mapnik.GUESS_LONGITUDE, guessLongitude);
+                        i.putExtra(Mapnik.RIGHT_LOCATION, rightLocation);
                         startActivity(i);
                     }
                 });
@@ -711,10 +714,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             App.log("finished game with score:", String.valueOf(App.CurrentGame.CURRENT_SCORE));
 
             Intent submitScore = new Intent(a, SubmitScore.class);
-                submitScore.putExtra("score", App.CurrentGame.CURRENT_SCORE);
-                submitScore.putExtra("course", App.CurrentGame.COURSE);
-                submitScore.putExtra("diameter", App.CurrentGame.CURRENT_DIAMETER);
-                submitScore.putExtra("courseName", App.CurrentGame.COURSE_NAME);
+                submitScore.putExtra(Mapnik.SCORE, App.CurrentGame.CURRENT_SCORE);
+                submitScore.putExtra(Mapnik.COURSE, App.CurrentGame.COURSE);
+                submitScore.putExtra(Mapnik.DIAMETER, App.CurrentGame.CURRENT_DIAMETER);
+                submitScore.putExtra(Mapnik.COURSE_NAME, App.CurrentGame.COURSE_NAME);
 
             a.startActivity(submitScore);
 

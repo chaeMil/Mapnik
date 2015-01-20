@@ -25,8 +25,8 @@ public class MapHelpActivity extends Activity implements OnMapReadyCallback {
         setContentView(R.layout.map_activity);
 
         Bundle extras = getIntent().getExtras();
-        locLatitude = extras.getDouble("locLatitude");
-        locLongitude = extras.getDouble("locLongitude");
+        locLatitude = extras.getDouble(Mapnik.LOC_LATITUDE);
+        locLongitude = extras.getDouble(Mapnik.LOC_LONGITUDE);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);

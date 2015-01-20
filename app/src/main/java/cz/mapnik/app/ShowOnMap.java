@@ -58,13 +58,13 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
 
         Bundle extras = getIntent().getExtras();
 
-        guess = new LatLng(extras.getDouble("guessLatitude"),
-                extras.getDouble("guessLongitude"));
+        guess = new LatLng(extras.getDouble(Mapnik.GUESS_LATITUDE),
+                extras.getDouble(Mapnik.GUESS_LONGITUDE));
 
-        location = new LatLng(extras.getDouble("locLatitude"),
-                extras.getDouble("locLongitude"));
+        location = new LatLng(extras.getDouble(Mapnik.LOC_LATITUDE),
+                extras.getDouble(Mapnik.LOC_LONGITUDE));
 
-        rightAnswer = extras.getBoolean("rightAnswer");
+        rightAnswer = extras.getBoolean(Mapnik.RIGHT_ANSWER);
 
     }
 
@@ -94,7 +94,7 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
 
         Marker locMarker = map.addMarker(new MarkerOptions()
                 .title(getResources().getString(R.string.right_location))
-                .snippet(getIntent().getExtras().getString("rightAnswer"))
+                .snippet(getIntent().getExtras().getString(Mapnik.RIGHT_ANSWER))
                 .position(location));
         locMarker.showInfoWindow();
 

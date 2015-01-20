@@ -171,7 +171,7 @@ public class StartActivity extends ActionBarActivity implements
                                 .get(0)
                                 .getAddressLine(0);
                     }
-                    App.CurrentGame.COURSE = "playerLocation";
+                    App.CurrentGame.COURSE = Mapnik.PLAYER_LOCATION;
                     Intent i = new Intent(StartActivity.this, ChooseDiameter.class);
                     startActivity(i);
                     dialog.hide();

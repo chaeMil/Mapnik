@@ -16,6 +16,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Map;
+
 import at.markushi.ui.CircleButton;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -55,7 +57,7 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
                 loc.setLatitude(customLocation.latitude);
                 loc.setLongitude(customLocation.longitude);
                 App.setStartingPoint(loc);
-                App.CurrentGame.COURSE = "customLocation";
+                App.CurrentGame.COURSE = Mapnik.CUSTOM_LOCATION;
                 Intent i = new Intent(ChooseCustomLocation.this, ChooseDiameter.class);
                 startActivity(i);
             }

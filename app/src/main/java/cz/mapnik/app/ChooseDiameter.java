@@ -154,7 +154,7 @@ public class ChooseDiameter extends Activity implements OnMapReadyCallback {
                 if (diameter != 0) {
                     Intent i = new Intent(ChooseDiameter.this, GuessActivity.class);
                     App.CurrentGame.CURRENT_DIAMETER = diameter;
-                    if (App.CurrentGame.COURSE.equals("playerLocation")) {
+                    if (App.CurrentGame.COURSE.equals(Mapnik.PLAYER_LOCATION)) {
                         switch (diameter) {
                             case 3000:
                                 App.CurrentGame.COURSE =
