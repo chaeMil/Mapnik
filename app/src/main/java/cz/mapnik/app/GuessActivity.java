@@ -204,7 +204,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 currentGuessRadius = GUESS_RADIUS / 10 * App.CurrentGame.CURRENT_ROUND;
             }
             else {
-                currentGuessRadius = GUESS_RADIUS;
+                if (App.CurrentGame.CURRENT_ROUND % 2 == 0) {
+                    currentGuessRadius = GUESS_RADIUS / 2;
+                } else {
+                    currentGuessRadius = GUESS_RADIUS;
+                }
             }
 
             panorama.setPosition(getRandomNearbyLocation(lat, lng, currentGuessRadius), GUESS_SNAP_RADIUS);
@@ -394,6 +398,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 .build();
 
         mGoogleApiClient.connect();
+
+        App.log("== currentRound: ", String.valueOf(App.CurrentGame.CURRENT_ROUND)
+                + "/" + GAME_MAX_ROUNDS);
 
 
         streetViewPanoramaFragment = (StreetViewPanoramaFragment) getFragmentManager()
@@ -709,6 +716,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         if (App.CurrentGame.CURRENT_ROUND < GAME_MAX_ROUNDS + 1) {
             a.startActivity(i);
             a.overridePendingTransition(R.animator.card_in, R.animator.card_out);
+            App.log("== endOfRound: ", String.valueOf(App.CurrentGame.CURRENT_ROUND));
         }
         else {
             App.log("finished game with score:", String.valueOf(App.CurrentGame.CURRENT_SCORE));

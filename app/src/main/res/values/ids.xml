@@ -10,12 +10,12 @@
     <string name="achievement_test_achievement_3" translatable="false">CgkIu8v476oMEAIQAw</string>
     <string name="achievement_test_achievement_4" translatable="false">CgkIu8v476oMEAIQBA</string>
     <string name="achievement_test_achievement_5" translatable="false">CgkIu8v476oMEAIQBQ</string>
-    <string name="leaderboard_3k_player_location" translatable="false">CgkIu8v476oMEAIQCg</string>
-    <string name="leaderboard_5k_player_location" translatable="false">CgkIu8v476oMEAIQCw</string>
-    <string name="leaderboard_10k_player_location" translatable="false">CgkIu8v476oMEAIQDA</string>
-    <string name="leaderboard_prague_10k_verified" translatable="false">CgkIu8v476oMEAIQDQ</string>
-    <string name="leaderboard_london_10k_verified" translatable="false">CgkIu8v476oMEAIQDg</string>
-    <string name="leaderboard_berlin_10k_verified" translatable="false">CgkIu8v476oMEAIQDw</string>
-    <string name="leaderboard_paris_10k_verified" translatable="false">CgkIu8v476oMEAIQEQ</string>
-    <string name="leaderboard_global_high_score" translatable="false">CgkIu8v476oMEAIQEg</string>
+    <string name="leaderboard_3k_player_location" translatable="false">CgkIu8v476oMEAIQFA</string>
+    <string name="leaderboard_5k_player_location" translatable="false">CgkIu8v476oMEAIQFQ</string>
+    <string name="leaderboard_10k_player_location" translatable="false">CgkIu8v476oMEAIQFg</string>
+    <string name="leaderboard_prague_10k_verified" translatable="false">CgkIu8v476oMEAIQFw</string>
+    <string name="leaderboard_london_10k_verified" translatable="false">CgkIu8v476oMEAIQGA</string>
+    <string name="leaderboard_berlin_10k_verified" translatable="false">CgkIu8v476oMEAIQGQ</string>
+    <string name="leaderboard_paris_10k_verified" translatable="false">CgkIu8v476oMEAIQGg</string>
+    <string name="leaderboard_global_high_score" translatable="false">CgkIu8v476oMEAIQEw</string>
 </resources>
