@@ -41,4 +41,15 @@
         android:visibility="gone"
         android:id="@+id/mapLabel"/>
 
+    <at.markushi.ui.CircleButton
+        android:visibility="invisible"
+        android:id="@+id/myLocationButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_maps_my_location"
+        app:cb_color="@color/bright_green"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+
 </RelativeLayout>

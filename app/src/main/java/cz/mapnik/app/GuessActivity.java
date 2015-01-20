@@ -164,19 +164,55 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                                 WRONG_ANSWER_LATLNG_CORRECTION),
                         ANSWER_RADIUS);
 
-                App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
-                App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
+                //App.log("wrongAnswer1Location", String.valueOf(wrongAnswer1Location));
+                //App.log("wrongAnswer2Location", String.valueOf(wrongAnswer2Location));
 
                 wrongAnswer1 = mGeocoder.getFromLocation(wrongAnswer1Location.latitude,
                         wrongAnswer1Location.longitude, 1).get(0).getAddressLine(0);
                 wrongAnswer2 = mGeocoder.getFromLocation(wrongAnswer2Location.latitude,
                         wrongAnswer2Location.longitude, 1).get(0).getAddressLine(0);
 
-                if (wrongAnswer1.equals(UNNAMED_RD)) {
-                    wrongAnswer1 = getString(R.string.unnamed_rd);
+                //correction of duplicate answers
+                if(wrongAnswer1.equals(rightAnswer)) {
+                    App.log(TAG, "correcting, wrongAnswer1 equals rightAnswer");
+                    wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+                            ANSWER_RADIUS);
+                    wrongAnswer1 = mGeocoder.getFromLocation(wrongAnswer1Location.latitude,
+                            wrongAnswer1Location.longitude, 1).get(0).getAddressLine(0);
                 }
-                if (wrongAnswer2.equals(UNNAMED_RD)) {
+
+                if(wrongAnswer2.equals(rightAnswer)) {
+                    App.log(TAG, "correcting, wrongAnswer2 equals rightAnswer");
+                    wrongAnswer2Location = Map.getRandomNearbyLocation(
+                            panLatitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
+                                    WRONG_ANSWER_LATLNG_CORRECTION),
+                            panLongitude + Basic.randDouble(-WRONG_ANSWER_LATLNG_CORRECTION,
+                                    WRONG_ANSWER_LATLNG_CORRECTION),
+                            ANSWER_RADIUS);
+                    wrongAnswer2 = mGeocoder.getFromLocation(wrongAnswer2Location.latitude,
+                            wrongAnswer2Location.longitude, 1).get(0).getAddressLine(0);
+                }
+
+                //correction of duplicate answers
+                if(wrongAnswer1.equals(wrongAnswer2)) {
+                    App.log(TAG, "correcting, wrongAnswer1 equals wrongAnswer2");
+                    wrongAnswer1Location = Map.getRandomNearbyLocation(panLatitude, panLongitude,
+                            ANSWER_RADIUS);
+                    wrongAnswer1 = mGeocoder.getFromLocation(wrongAnswer1Location.latitude,
+                            wrongAnswer1Location.longitude, 1).get(0).getAddressLine(0);
+                }
+
+                if (wrongAnswer1.trim().equals(UNNAMED_RD)) {
+                    wrongAnswer1 = getString(R.string.unnamed_rd);
+                    App.log(TAG, "correcting, " + UNNAMED_RD + " to " + wrongAnswer1);
+                }
+                if (wrongAnswer2.trim().equals(UNNAMED_RD)) {
                     wrongAnswer2 = getString(R.string.unnamed_rd);
+                    App.log(TAG, "correcting, " + UNNAMED_RD + " to " + wrongAnswer2);
+                }
+                if(rightAnswer.trim().equals(UNNAMED_RD)) {
+                    rightAnswer = getString(R.string.unnamed_rd);
+                    App.log(TAG, "correcting, " + UNNAMED_RD + " to " + rightAnswer);
                 }
 
                 return new String[]{wrongAnswer1, wrongAnswer2, rightAnswer};

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +28,7 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
 
     private CircleButton doneButton;
     private LatLng customLocation;
+    private CircleButton myLocationButton;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -49,6 +51,7 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
 
         doneButton = (CircleButton) findViewById(R.id.doneButton);
         doneButton.setVisibility(View.GONE);
+        myLocationButton = (CircleButton) findViewById(R.id.myLocationButton);
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,10 +74,11 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
     @Override
     public void onMapReady(final GoogleMap map) {
         map.getUiSettings().setMapToolbarEnabled(false);
-        map.setMyLocationEnabled(false);
+        map.setMyLocationEnabled(true);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
 
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -89,6 +93,26 @@ public class ChooseCustomLocation extends Activity implements OnMapReadyCallback
                 YoYo.with(Techniques.SlideInUp)
                         .duration(400)
                         .playOn(doneButton);
+            }
+        });
+
+        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                myLocationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Location userLocation = map.getMyLocation();
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), 10));
+
+                    }
+                });
+
+                if (myLocationButton.getVisibility() != View.VISIBLE) {
+                    myLocationButton.setVisibility(View.VISIBLE);
+                    YoYo.with(Techniques.SlideInRight).duration(400).playOn(myLocationButton);
+                }
             }
         });
     }
