@@ -54,7 +54,7 @@
     <string name="geocoder_is_not_present">Geocoder is not running in your device. Try restarting your device.</string>
     <string name="action_leaderboards">Leaderboards</string>
     <string name="action_share_score">share score</string>
-    <string name="share_score">TODO share score:</string>
+    <string name="share_score">My new score in Mapnik</string>
     <string name="leaderboard_3k_player_location_name">My location [3km]</string>
     <string name="leaderboard_5k_player_location_name">My location [10km]</string>
     <string name="leaderboard_10k_player_location_name">My location [10km]</string>
@@ -65,5 +65,6 @@
     <string name="put_email">Please insert email address</string>
     <string name="put_bug_specification">Please specify bug</string>
     <string name="logcat_is_empty">LogCat is empty</string>
+    <string name="share_score_download">Download the amazing game here</string>
 
 </resources>

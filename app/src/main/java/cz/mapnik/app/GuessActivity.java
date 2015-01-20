@@ -722,7 +722,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
             Thread t = new Thread(){
                 public void run(){
                     try{
-                        sleep(700);
+                        sleep(900);
                         a.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

@@ -42,7 +42,7 @@
     <string name="action_leaderboards">Žebříčky</string>
     <string name="unable_to_download_answers">Někdo nám stojí na vedení...</string>
     <string name="action_share_score">sdílet skóre</string>
-    <string name="share_score">TODO share score:</string>
+    <string name="share_score">Moje nové skóre ve hře Mapnik</string>
     <string name="leaderboard_3k_player_location_name">Moje lokace [3km]</string>
     <string name="leaderboard_5k_player_location_name">Moje lokace [5km]</string>
     <string name="leaderboard_10k_player_location_name">Moje lokace [10km]</string>
@@ -53,5 +53,6 @@
     <string name="logcat_is_empty">LogCat je prázdný</string>
     <string name="put_bug_specification">Prosím popiš chybu</string>
     <string name="put_email">Prosím vlož email</string>
+    <string name="share_score_download">Stáhněte si úžasnou hru zde</string>
 
 </resources>

@@ -32,6 +32,7 @@ import static cz.mapnik.app.utils.Basic.connectionProblemToast;
 public class SubmitScore extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String DOWNLOAD_GAME_LINK = "https://play.google.com/store/apps/details?id=cz.mapnik.app";
     private GoogleApiClient mGoogleApiClient;
 
     private static int RC_SIGN_IN = 9001;
@@ -63,6 +64,11 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
     }
 
     public void prepareUi(final String course, final String courseName) {
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.custom_font_regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         Thread showCourseName = new Thread(){
             public void run(){
@@ -120,11 +126,6 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
 
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.custom_font_regular))
-                .setFontAttrId(R.attr.fontPath)
-                .build());
 
         // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -187,7 +188,8 @@ public class SubmitScore extends ActionBarActivity implements GoogleApiClient.Co
                 Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_score)
-                            + ": " + score);
+                            + ": " + score + "\n" + getString(R.string.share_score_download)
+                            + ": " + DOWNLOAD_GAME_LINK);
                     sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             break;
