@@ -234,19 +234,20 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
     public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
         if(hasUserLocation) {
 
+
             if (App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_3k_player_location))
                 || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_5k_player_location))
                 || App.CurrentGame.COURSE.equals(getString(R.string.leaderboard_10k_player_location))
                 || App.CurrentGame.COURSE.equals(Mapnik.CUSTOM_LOCATION)) {
                 currentGuessRadius = GUESS_RADIUS / 10 * App.CurrentGame.CURRENT_ROUND;
-            }
-            else {
+            } else {
                 if (App.CurrentGame.CURRENT_ROUND % 2 == 0) {
                     currentGuessRadius = GUESS_RADIUS / 2;
                 } else {
                     currentGuessRadius = GUESS_RADIUS;
                 }
             }
+
 
             panorama.setPosition(getRandomNearbyLocation(lat, lng, currentGuessRadius), GUESS_SNAP_RADIUS);
             App.log("guessRadius", String.valueOf(currentGuessRadius)+"m");
@@ -868,8 +869,10 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
 
     @Override
     public void onConnected(Bundle bundle) {
-        Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
-                .findViewById(android.R.id.content));
+        if(mGoogleApiClient.isConnected()) {
+            Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
+                    .findViewById(android.R.id.content));
+        }
 
         //achievements
         if (App.CurrentGame.GUESSES_IN_ROW == 3) {
