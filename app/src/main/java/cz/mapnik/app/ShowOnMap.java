@@ -72,7 +72,7 @@ public class ShowOnMap extends Activity implements OnMapReadyCallback {
     public void onBackPressed() {
         super.onBackPressed();
         GuessActivity.nextGuess(this);
-        finish();
+        //finish();
     }
 
     @Override
