@@ -114,9 +114,9 @@ public class StartActivity extends ActionBarActivity implements
                         // add other APIs and scopes here as needed
                 .build();
 
-        if (isOnline(getApplicationContext())) {
-            mGoogleApiClient.connect();
-        } else {
+        mGoogleApiClient.connect();
+
+        if (!isOnline(getApplicationContext())) {
             connectionProblemToast(getApplicationContext());
             finish();
         }
@@ -231,7 +231,7 @@ public class StartActivity extends ActionBarActivity implements
                 } else {
                     connectionProblemToast(getApplicationContext());
                 }
-            break;
+                break;
             case R.id.action_leaderboard:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     startActivityForResult(Games.Leaderboards
@@ -239,7 +239,7 @@ public class StartActivity extends ActionBarActivity implements
                 } else {
                     connectionProblemToast(getApplicationContext());
                 }
-            break;
+                break;
             case R.id.bug_report:
                 Intent i = new Intent(StartActivity.this, BugReport.class);
                 startActivity(i);

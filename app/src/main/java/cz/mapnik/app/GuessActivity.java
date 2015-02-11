@@ -396,11 +396,7 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guess);
-
+    private void UITweaks() {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(getString(R.string.custom_font_regular))
                 .setFontAttrId(R.attr.fontPath)
@@ -423,24 +419,11 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.bright_green));
         }
+    }
 
-        // Create the Google Api Client with access to Plus and Games
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                        // add other APIs and scopes here as needed
-                .build();
-
-        mGoogleApiClient.connect();
-
-        App.log("== currentRound: ", String.valueOf(App.CurrentGame.CURRENT_ROUND)
-                + "/" + GAME_MAX_ROUNDS);
-
-
+    private void getUI() {
         streetViewPanoramaFragment = (StreetViewPanoramaFragment) getFragmentManager()
-                        .findFragmentById(R.id.streetviewpanorama);
+                .findFragmentById(R.id.streetviewpanorama);
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
 
         debugValues = (RelativeLayout) findViewById(R.id.debugValues);
@@ -461,10 +444,9 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
         downloadingAnswersWrapper = (RelativeLayout) findViewById(R.id.downloading_answers_wrapper);
         courseName = (TextView) findViewById(R.id.courseName);
 
-        geocoder = new Geocoder(getApplicationContext());
+    }
 
-        Location location = App.startingPoint;
-
+    private void setupUI() {
         if(App.DEBUG) {
             debugValues.setVisibility(View.VISIBLE);
             userAddress.setText(App.userAddress);
@@ -516,6 +498,34 @@ public class GuessActivity extends ActionBarActivity implements OnStreetViewPano
                 startActivity(i);
             }
         });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_guess);
+
+        UITweaks();
+        getUI();
+        setupUI();
+
+        // Create the Google Api Client with access to Plus and Games
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                        // add other APIs and scopes here as needed
+                .build();
+
+        mGoogleApiClient.connect();
+
+        App.log("== currentRound: ", String.valueOf(App.CurrentGame.CURRENT_ROUND)
+                + "/" + GAME_MAX_ROUNDS);
+
+        geocoder = new Geocoder(getApplicationContext());
+
+        Location location = App.startingPoint;
 
         LocationListener locationListener = new LocationListener() {
             @Override
