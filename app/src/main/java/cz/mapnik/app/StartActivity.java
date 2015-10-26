@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.location.LocationServices;
@@ -50,24 +51,9 @@ public class StartActivity extends ActionBarActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     private static int RC_SIGN_IN = 9001;
-
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInflow = true;
     private boolean mSignInClicked = false;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -77,6 +63,7 @@ public class StartActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.start_activity);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -103,18 +90,6 @@ public class StartActivity extends ActionBarActivity implements
         }
 
         getSupportActionBar().setTitle("");
-
-        // Create the Google Api Client with access to Plus and Games
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .addApi(LocationServices.API)
-                        // add other APIs and scopes here as needed
-                .build();
-
-        mGoogleApiClient.connect();
 
         if (!isOnline(getApplicationContext())) {
             connectionProblemToast(getApplicationContext());
@@ -144,6 +119,18 @@ public class StartActivity extends ActionBarActivity implements
                 startDialog(StartActivity.this).show();
             }
         });
+
+        // Create the Google Api Client with access to Plus and Games
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                        // add other APIs and scopes here as needed
+                .build();
+
+        mGoogleApiClient.connect();
+
     }
 
     public Dialog startDialog(Activity a) {
@@ -251,13 +238,33 @@ public class StartActivity extends ActionBarActivity implements
 
 
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        location = Map.getLastKnownLocation(mGoogleApiClient);
-        Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView()
-                .findViewById(android.R.id.content));
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        if (requestCode == RC_SIGN_IN) {
+            mSignInClicked = false;
+            mResolvingConnectionFailure = false;
+            if (resultCode == RESULT_OK) {
+                mGoogleApiClient.connect();
+            } else {
+                // Bring up an error dialog to alert the user that sign-in
+                // failed. The R.string.signin_failure should reference an error
+                // string in your strings.xml file that tells the user they
+                // could not be signed in, such as "Unable to sign in."
+                PlayGames.signinDisabledByUser(StartActivity.this).show();
+            }
+        }
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        Toast.makeText(getApplicationContext(), getString(R.string.connected_to_play_games), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Attempt to reconnect
+        mGoogleApiClient.connect();
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -285,33 +292,5 @@ public class StartActivity extends ActionBarActivity implements
         }
 
         // Put code here to display the sign-in button
-    }
-
-
-
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent intent) {
-        if (requestCode == RC_SIGN_IN) {
-            mSignInClicked = false;
-            mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
-                mGoogleApiClient.connect();
-            } else {
-                // Bring up an error dialog to alert the user that sign-in
-                // failed. The R.string.signin_failure should reference an error
-                // string in your strings.xml file that tells the user they
-                // could not be signed in, such as "Unable to sign in."
-                /*BaseGameUtils.showActivityResultError(this,
-                        requestCode, resultCode, R.string.signin_failure);*/
-
-                PlayGames.signinDisabledByUser(StartActivity.this).show();
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // Attempt to reconnect
-        mGoogleApiClient.connect();
     }
 }

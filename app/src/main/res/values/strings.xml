@@ -66,5 +66,6 @@
     <string name="put_bug_specification">Please specify bug</string>
     <string name="logcat_is_empty">LogCat is empty</string>
     <string name="share_score_download">Download the amazing game here</string>
+    <string name="connected_to_play_games">Connected to Play Games</string>
 
 </resources>
